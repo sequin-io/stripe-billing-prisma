@@ -85,6 +85,9 @@ export default function Home() {
                 </td>
               </tr>
             </table>
+            <button className="text-blue-500 cursor-pointer py-2 w-full text-center font-bold mt-4">
+              See All
+            </button>
           </div>
         </main>
       </div>
