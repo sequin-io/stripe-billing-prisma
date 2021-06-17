@@ -25,7 +25,7 @@ export default function Home() {
               <tr className="border-b h-12">
                 <td className="font-semibold">Payment Method</td>
                 <td>
-                  Visa <span className="font-mono">*0420</span>
+                  Visa <span className="font-mono">*2420</span>
                 </td>
                 <td className="text-right">
                   <a className="text-blue-500 cursor-pointer">Update</a>
