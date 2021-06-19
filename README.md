@@ -6,6 +6,14 @@ This Stripe billing portal is a Next.js/Tailwind app. On the back-end, it is pow
 
 This repo uses plain `node-postgres` (`pg`) for all SQL queries. Example repos with popular Node ORMs coming soon.
 
+### View live
+
+You can view the app live here:
+
+[https://stripe-billing-hio0e7ngh-syncinc.vercel.app/](https://stripe-billing-hio0e7ngh-syncinc.vercel.app/)
+
+The only feature that does not work is the "Update" link for Payment Method.
+
 ### Setup
 
 To use for yourself:
