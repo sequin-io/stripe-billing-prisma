@@ -41,7 +41,7 @@ export default function ShowBilling() {
           <p className="italic">Your data. Here to save the day.</p>
         </header>
         <main className="my-8">
-          <p className="text-xl pl-4">Hello Milena!</p>
+          <p className="text-xl pl-4">Hello!</p>
           <p className="mt-4 p-6 shadow border-t rounded-md text-sm">
             {data.lastInvoice ? (
               <>
