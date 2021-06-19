@@ -1,34 +1,76 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Plug-and-play Stripe billing portal
 
-## Getting Started
+This Stripe billing portal is a Next.js/Tailwind app. On the back-end, it is powered by a Postgres replica containing Stripe data (thanks to Sync Inc).
 
-First, run the development server:
+![](./docs/hero-image.png)
+
+This repo uses plain `node-postgres` (`pg`) for all SQL queries. Example repos with popular Node ORMs coming soon.
+
+### Setup
+
+To use for yourself:
+
+**1. Copy `.env.example` → `.env.local`**
+
+Run the following:
 
 ```bash
-npm run dev
-# or
-yarn dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+You'll see in `.env.local` that there are two env variables you need to set:
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```bash
+PGCONN=
+STRIPE_KEY=
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.tsx`.
+For `STRIPE_KEY`, grab a key [from your Stripe dashboard](https://dashboard.stripe.com/apikeys).
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+For `PGCONN`, use the Postgres connection URL provided by Sync Inc in the following step.
 
-## Learn More
+**2. Setup your Sync Inc database**
 
-To learn more about Next.js, take a look at the following resources:
+With Sync Inc, you can provision a real-time Postgres replica in AWS with all your Stripe data.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+[Sign-up for an account here](https://app.syncinc.so/signup) (free to start).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+At the end of the on-boarding process, Sync Inc displays your PG connection URL. Copy and paste this URL as your `PGCONN`:
 
-## Deploy on Vercel
+![](./docs/connect-url.png)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+That's it! Now, on `/`, you'll see a list of customers. Click on one to see their billing portal:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![](./docs/customer-list.png)
+
+### How it works
+
+**Data**
+
+The React front-end uses Next's `/api` features to query a Postgres database containing Stripe data. There are three API endpoints:
+
+- `GET /customers`: For populating the list of customers on `/`
+- `GET /customer/[id]`: Hydrates the billing portal with the customer details, subscription data, receipts, etc.
+- `POST /customer/billingPortal`: If a customer wants to change their payment method, this generates a link to Stripe's billing portal to redirect them to
+
+To get a sense of how it all works: in `./pages/api/customer/[id].ts`, you'll see an API handler function that first grabs the id from the path:
+
+```js
+let { id } = req.query;
+```
+
+Then composes a response object with a number of SQL queries:
+
+```js
+let customer = await getOne(`select * from customer where id = $1`, [id]);
+let subscription = await getOne(
+  `select * from subscription where customer_id = $1`,
+  [id]
+);
+```
+
+> Note: to optimize performance/round-trips to the database, these queries can be combined into one super query.
+
+**Styles**
+
+Styles are all done with [Tailwind](https://tailwindcss.com/).
