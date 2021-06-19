@@ -19,7 +19,7 @@ export default function Home() {
             <ul className="list-disc list-inside text-purple-800">
               {data.customers.map(
                 ({ id, email }: { id: string; email: string }) => (
-                  <li>
+                  <li key={id}>
                     <a href={`/billing/${id}`}>{email}</a>
                   </li>
                 )

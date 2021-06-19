@@ -123,7 +123,7 @@ export default function ShowBilling() {
                   {data.charges
                     .slice(0, showReceiptCount)
                     .map((charge: any) => (
-                      <tr className="border-b h-12">
+                      <tr key={charge.id} className="border-b h-12">
                         <td>
                           {format(parseISO(charge.created), "MMMM do, y")}
                         </td>
@@ -143,6 +143,7 @@ export default function ShowBilling() {
                         <td className="text-right">
                           <a
                             href={charge.receipt_url}
+                            rel="noreferrer"
                             target="_blank"
                             className="text-blue-500 cursor-pointer"
                           >
