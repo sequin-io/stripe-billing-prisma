@@ -1,15 +1,18 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { Client } from "pg";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { PrismaClient } from "@prisma/client";
 
-const client = new Client({ connectionString: process.env.PGCONN });
-client.connect();
+const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  let r = await client.query(`select * from customer limit 100`, []);
-  let customers = r.rows;
+  let customers = await prisma.customer.findMany({ take: 100 });
 
   res.status(200).send({ ok: true, customers });
 }
+
+// @ts-ignore
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};

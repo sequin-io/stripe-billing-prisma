@@ -1,0 +1,2637 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model account {
+  id                                                                  String                        @id
+  business_type                                                       String?
+  charges_enabled                                                     Boolean?
+  country                                                             String?
+  created                                                             DateTime?                     @db.Timestamp(6)
+  default_currency                                                    String?
+  details_submitted                                                   Boolean?
+  email                                                               String?
+  individual_id                                                       String?
+  metadata                                                            Json?
+  object                                                              String?
+  payouts_enabled                                                     Boolean?
+  type                                                                String?
+  deleted                                                             Boolean?
+  tos_acceptance_date                                                 DateTime?                     @db.Timestamp(6)
+  tos_acceptance_ip                                                   String?
+  tos_acceptance_service_agreement                                    String?
+  tos_acceptance_user_agent                                           String?
+  settings_bacs_debit_payments                                        Json?
+  settings_branding                                                   Json?
+  settings_card_issuing                                               Json?
+  settings_card_payments                                              Json?
+  settings_dashboard                                                  Json?
+  settings_payments                                                   Json?
+  settings_payouts                                                    Json?
+  settings_sepa_debit_payments                                        Json?
+  requirements_current_deadline                                       DateTime?                     @db.Timestamp(6)
+  requirements_currently_due                                          String[]
+  requirements_disabled_reason                                        String?
+  requirements_errors                                                 Json?
+  requirements_eventually_due                                         String[]
+  requirements_past_due                                               String[]
+  requirements_pending_verification                                   String[]
+  business_profile_mcc                                                String?
+  business_profile_name                                               String?
+  business_profile_product_description                                String?
+  business_profile_support_address                                    Json?
+  business_profile_support_email                                      String?
+  business_profile_support_phone                                      String?
+  business_profile_support_url                                        String?
+  business_profile_url                                                String?
+  capabilities_acss_debit_payments                                    String?
+  capabilities_afterpay_clearpay_payments                             String?
+  capabilities_au_becs_debit_payments                                 String?
+  capabilities_bacs_debit_payments                                    String?
+  capabilities_bancontact_payments                                    String?
+  capabilities_card_issuing                                           String?
+  capabilities_card_payments                                          String?
+  capabilities_cartes_bancaires_payments                              String?
+  capabilities_eps_payments                                           String?
+  capabilities_fpx_payments                                           String?
+  capabilities_giropay_payments                                       String?
+  capabilities_grabpay_payments                                       String?
+  capabilities_ideal_payments                                         String?
+  capabilities_jcb_payments                                           String?
+  capabilities_legacy_payments                                        String?
+  capabilities_oxxo_payments                                          String?
+  capabilities_p24_payments                                           String?
+  capabilities_sepa_debit_payments                                    String?
+  capabilities_sofort_payments                                        String?
+  capabilities_tax_reporting_us_1099_k                                String?
+  capabilities_tax_reporting_us_1099_misc                             String?
+  capabilities_transfers                                              String?
+  company_address                                                     Json?
+  company_address_kana                                                Json?
+  company_address_kanji                                               Json?
+  company_directors_provided                                          Boolean?
+  company_executives_provided                                         Boolean?
+  company_name                                                        String?
+  company_name_kana                                                   String?
+  company_name_kanji                                                  String?
+  company_owners_provided                                             Boolean?
+  company_phone                                                       String?
+  company_structure                                                   String?
+  company_tax_id_provided                                             Boolean?
+  company_tax_id_registrar                                            String?
+  company_vat_id_provided                                             Boolean?
+  company_verification                                                Json?
+  person_account_individual_idToperson                                person?                       @relation("account_individual_idToperson", fields: [individual_id], references: [id])
+  application_fee                                                     application_fee[]
+  bank_account                                                        bank_account[]
+  capability                                                          capability[]
+  card                                                                card[]
+  charge_accountTocharge_destination_id                               charge[]                      @relation("accountTocharge_destination_id")
+  charge_accountTocharge_on_behalf_of_id                              charge[]                      @relation("accountTocharge_on_behalf_of_id")
+  charge_accountTocharge_transfer_data_destination_id                 charge[]                      @relation("accountTocharge_transfer_data_destination_id")
+  connect_collection_transfer                                         connect_collection_transfer[]
+  event                                                               event[]
+  invoice_accountToinvoice_on_behalf_of_id                            invoice[]                     @relation("accountToinvoice_on_behalf_of_id")
+  invoice_accountToinvoice_transfer_data_destination_id               invoice[]                     @relation("accountToinvoice_transfer_data_destination_id")
+  payment_intent_accountTopayment_intent_on_behalf_of_id              payment_intent[]              @relation("accountTopayment_intent_on_behalf_of_id")
+  payment_intent_accountTopayment_intent_transfer_data_destination_id payment_intent[]              @relation("accountTopayment_intent_transfer_data_destination_id")
+  person_accountToperson_account_id                                   person[]                      @relation("accountToperson_account_id")
+  platform_tax_fee                                                    platform_tax_fee[]
+  recipient_accountTorecipient_migrated_to_id                         recipient[]                   @relation("accountTorecipient_migrated_to_id")
+  recipient_accountTorecipient_rolled_back_from_id                    recipient[]                   @relation("accountTorecipient_rolled_back_from_id")
+  setup_attempt                                                       setup_attempt[]
+  setup_intent                                                        setup_intent[]
+  subscription                                                        subscription[]
+  transfer                                                            transfer[]
+}
+
+model alipay_account {
+  id               String    @id
+  created          DateTime? @db.Timestamp(6)
+  customer_id      String?
+  fingerprint      String?
+  livemode         Boolean?
+  metadata         Json?
+  object           String?
+  payment_amount   BigInt?
+  payment_currency String?
+  reusable         Boolean?
+  used             Boolean?
+  username         String?
+  deleted          Boolean?
+  customer         customer? @relation(fields: [customer_id], references: [id])
+}
+
+model application {
+  id                           String                         @id
+  name                         String?
+  object                       String?
+  application_fee              application_fee[]
+  billing_portal_configuration billing_portal_configuration[]
+  charge                       charge[]
+  order                        order[]
+  payment_intent               payment_intent[]
+  setup_attempt                setup_attempt[]
+  setup_intent                 setup_intent[]
+  webhook_endpoint             webhook_endpoint[]
+}
+
+model application_fee {
+  id                                                        String               @id
+  account_id                                                String?
+  amount                                                    BigInt?
+  amount_refunded                                           BigInt?
+  application_id                                            String?
+  balance_transaction_id                                    String?
+  charge_id                                                 String?
+  created                                                   DateTime?            @db.Timestamp(6)
+  currency                                                  String?
+  livemode                                                  Boolean?
+  object                                                    String?
+  originating_transaction_id                                String?
+  refunded                                                  Boolean?
+  account                                                   account?             @relation(fields: [account_id], references: [id])
+  application                                               application?         @relation(fields: [application_id], references: [id])
+  balance_transaction                                       balance_transaction? @relation(fields: [balance_transaction_id], references: [id])
+  charge_application_fee_charge_idTocharge                  charge?              @relation("application_fee_charge_idTocharge", fields: [charge_id], references: [id])
+  charge_application_fee_originating_transaction_idTocharge charge?              @relation("application_fee_originating_transaction_idTocharge", fields: [originating_transaction_id], references: [id])
+  charge_application_feeTocharge_application_fee_id         charge[]             @relation("application_feeTocharge_application_fee_id")
+  fee_refund                                                fee_refund[]
+}
+
+model balance_transaction {
+  id                                                                String                @id
+  amount                                                            BigInt?
+  available_on                                                      DateTime?             @db.Timestamp(6)
+  created                                                           DateTime?             @db.Timestamp(6)
+  currency                                                          String?
+  description                                                       String?
+  exchange_rate                                                     Decimal?              @db.Decimal
+  fee                                                               BigInt?
+  net                                                               BigInt?
+  object                                                            String?
+  reporting_category                                                String?
+  status                                                            String?
+  type                                                              String?
+  fee_details_amount                                                BigInt?
+  fee_details_application                                           String?
+  fee_details_currency                                              String?
+  fee_details_description                                           String?
+  fee_details_type                                                  String?
+  application_fee                                                   application_fee[]
+  charge                                                            charge[]
+  fee_refund                                                        fee_refund[]
+  issuing_transaction                                               issuing_transaction[]
+  payout_balance_transactionTopayout_balance_transaction_id         payout[]              @relation("balance_transactionTopayout_balance_transaction_id")
+  payout_balance_transactionTopayout_failure_balance_transaction_id payout[]              @relation("balance_transactionTopayout_failure_balance_transaction_id")
+  refund_balance_transactionTorefund_balance_transaction_id         refund[]              @relation("balance_transactionTorefund_balance_transaction_id")
+  refund_balance_transactionTorefund_failure_balance_transaction_id refund[]              @relation("balance_transactionTorefund_failure_balance_transaction_id")
+  topup                                                             topup[]
+  transfer                                                          transfer[]
+  transfer_reversal                                                 transfer_reversal[]
+}
+
+model bank_account {
+  id                       String      @id
+  account_id               String?
+  account_holder_name      String?
+  account_holder_type      String?
+  available_payout_methods String[]
+  bank_name                String?
+  country                  String?
+  currency                 String?
+  customer_id              String?
+  default_for_currency     Boolean?
+  fingerprint              String?
+  last4                    String?
+  metadata                 Json?
+  object                   String?
+  routing_number           String?
+  status                   String?
+  deleted                  Boolean?
+  account                  account?    @relation(fields: [account_id], references: [id])
+  customer                 customer?   @relation(fields: [customer_id], references: [id])
+  recipient                recipient[]
+  token                    token[]
+}
+
+model billing_portal_configuration {
+  id                                    String                   @id
+  active                                Boolean?
+  application_id                        String?
+  created                               DateTime?                @db.Timestamp(6)
+  default_return_url                    String?
+  is_default                            Boolean?
+  livemode                              Boolean?
+  object                                String?
+  updated                               DateTime?                @db.Timestamp(6)
+  features_customer_update              Json?
+  features_invoice_history              Json?
+  features_payment_method_update        Json?
+  features_subscription_cancel          Json?
+  features_subscription_pause           Json?
+  features_subscription_update          Json?
+  business_profile_headline             String?
+  business_profile_privacy_policy_url   String?
+  business_profile_terms_of_service_url String?
+  application                           application?             @relation(fields: [application_id], references: [id])
+  billing_portal_session                billing_portal_session[]
+}
+
+model billing_portal_session {
+  id                           String                        @id
+  configuration_id             String?
+  created                      DateTime?                     @db.Timestamp(6)
+  customer_id                  String?
+  livemode                     Boolean?
+  object                       String?
+  on_behalf_of                 String?
+  return_url                   String?
+  url                          String?
+  billing_portal_configuration billing_portal_configuration? @relation(fields: [configuration_id], references: [id])
+  customer                     customer?                     @relation(fields: [customer_id], references: [id])
+}
+
+model bitcoin_receiver {
+  id                      String                @id
+  active                  Boolean?
+  amount                  BigInt?
+  amount_received         BigInt?
+  bitcoin_amount          BigInt?
+  bitcoin_amount_received BigInt?
+  bitcoin_uri             String?
+  created                 DateTime?             @db.Timestamp(6)
+  currency                String?
+  customer_id             String?
+  description             String?
+  email                   String?
+  filled                  Boolean?
+  inbound_address         String?
+  livemode                Boolean?
+  metadata                Json?
+  object                  String?
+  payment                 String?
+  refund_address          String?
+  uncaptured_funds        Boolean?
+  used_for_payment        Boolean?
+  deleted                 Boolean?
+  customer                customer?             @relation(fields: [customer_id], references: [id])
+  bitcoin_transaction     bitcoin_transaction[]
+}
+
+model bitcoin_transaction {
+  id               String            @id
+  amount           BigInt?
+  bitcoin_amount   BigInt?
+  created          DateTime?         @db.Timestamp(6)
+  currency         String?
+  object           String?
+  receiver         String?
+  bitcoin_receiver bitcoin_receiver? @relation(fields: [receiver], references: [id])
+}
+
+model capability {
+  id                                String    @id
+  account_id                        String?
+  object                            String?
+  requested                         Boolean?
+  requested_at                      DateTime? @db.Timestamp(6)
+  status                            String?
+  requirements_current_deadline     DateTime? @db.Timestamp(6)
+  requirements_currently_due        String[]
+  requirements_disabled_reason      String?
+  requirements_errors               Json?
+  requirements_eventually_due       String[]
+  requirements_past_due             String[]
+  requirements_pending_verification String[]
+  account                           account?  @relation(fields: [account_id], references: [id])
+}
+
+model card {
+  id                                        String           @id
+  account_id                                String?
+  address_city                              String?
+  address_country                           String?
+  address_line1                             String?
+  address_line1_check                       String?
+  address_line2                             String?
+  address_state                             String?
+  address_zip                               String?
+  address_zip_check                         String?
+  available_payout_methods                  String[]
+  brand                                     String?
+  country                                   String?
+  currency                                  String?
+  customer_id                               String?
+  cvc_check                                 String?
+  default_for_currency                      Boolean?
+  description                               String?
+  dynamic_last4                             String?
+  exp_month                                 BigInt?
+  exp_year                                  BigInt?
+  fingerprint                               String?
+  funding                                   String?
+  iin                                       String?
+  issuer                                    String?
+  last4                                     String?
+  metadata                                  Json?
+  name                                      String?
+  object                                    String?
+  recipient_id                              String?
+  tokenization_method                       String?
+  deleted                                   Boolean?
+  account                                   account?         @relation(fields: [account_id], references: [id])
+  customer                                  customer?        @relation(fields: [customer_id], references: [id])
+  recipient_card_recipient_idTorecipient    recipient?       @relation("card_recipient_idTorecipient", fields: [recipient_id], references: [id])
+  recipient_cardTorecipient_default_card_id recipient[]      @relation("cardTorecipient_default_card_id")
+  three_d_secure                            three_d_secure[]
+  token                                     token[]
+}
+
+model charge {
+  id                                                                 String                      @id
+  amount                                                             BigInt?
+  amount_captured                                                    BigInt?
+  amount_refunded                                                    BigInt?
+  application_id                                                     String?
+  application_fee_id                                                 String?
+  application_fee_amount                                             BigInt?
+  authorization_code                                                 String?
+  balance_transaction_id                                             String?
+  calculated_statement_descriptor                                    String?
+  captured                                                           Boolean?
+  created                                                            DateTime?                   @db.Timestamp(6)
+  currency                                                           String?
+  customer_id                                                        String?
+  description                                                        String?
+  destination_id                                                     String?
+  dispute_id                                                         String?
+  disputed                                                           Boolean?
+  failure_code                                                       String?
+  failure_message                                                    String?
+  invoice_id                                                         String?
+  livemode                                                           Boolean?
+  metadata                                                           Json?
+  object                                                             String?
+  on_behalf_of_id                                                    String?
+  order_id                                                           String?
+  paid                                                               Boolean?
+  payment_intent_id                                                  String?
+  payment_method_id                                                  String?
+  receipt_email                                                      String?
+  receipt_number                                                     String?
+  receipt_url                                                        String?
+  refunded                                                           Boolean?
+  review_id                                                          String?
+  source_transfer_id                                                 String?
+  statement_descriptor                                               String?
+  statement_descriptor_suffix                                        String?
+  status                                                             String?
+  transfer_id                                                        String?
+  transfer_group                                                     String?
+  level3_customer_reference                                          String?
+  level3_line_items                                                  Json?
+  level3_merchant_reference                                          String?
+  level3_shipping_address_zip                                        String?
+  level3_shipping_amount                                             BigInt?
+  level3_shipping_from_zip                                           String?
+  shipping_address                                                   Json?
+  shipping_carrier                                                   String?
+  shipping_name                                                      String?
+  shipping_phone                                                     String?
+  shipping_tracking_number                                           String?
+  fraud_details_stripe_report                                        String?
+  fraud_details_user_report                                          String?
+  transfer_data_amount                                               BigInt?
+  transfer_data_destination_id                                       String?
+  alternate_statement_descriptors_kana                               String?
+  alternate_statement_descriptors_kanji                              String?
+  payment_method_details_ach_credit_transfer                         Json?
+  payment_method_details_ach_debit                                   Json?
+  payment_method_details_acss_debit                                  Json?
+  payment_method_details_afterpay_clearpay                           Json?
+  payment_method_details_alipay                                      Json?
+  payment_method_details_au_becs_debit                               Json?
+  payment_method_details_bacs_debit                                  Json?
+  payment_method_details_bancontact                                  Json?
+  payment_method_details_card                                        Json?
+  payment_method_details_card_present                                Json?
+  payment_method_details_eps                                         Json?
+  payment_method_details_fpx                                         Json?
+  payment_method_details_giropay                                     Json?
+  payment_method_details_grabpay                                     Json?
+  payment_method_details_ideal                                       Json?
+  payment_method_details_interac_present                             Json?
+  payment_method_details_klarna                                      Json?
+  payment_method_details_multibanco                                  Json?
+  payment_method_details_oxxo                                        Json?
+  payment_method_details_p24                                         Json?
+  payment_method_details_sepa_credit_transfer                        Json?
+  payment_method_details_sepa_debit                                  Json?
+  payment_method_details_sofort                                      Json?
+  payment_method_details_stripe_account                              Json?
+  payment_method_details_type                                        String?
+  payment_method_details_wechat                                      Json?
+  billing_details_address                                            Json?
+  billing_details_email                                              String?
+  billing_details_name                                               String?
+  billing_details_phone                                              String?
+  outcome_network_status                                             String?
+  outcome_reason                                                     String?
+  outcome_risk_level                                                 String?
+  outcome_risk_score                                                 BigInt?
+  outcome_rule                                                       Json?
+  outcome_seller_message                                             String?
+  outcome_type                                                       String?
+  application_fee_application_feeTocharge_application_fee_id         application_fee?            @relation("application_feeTocharge_application_fee_id", fields: [application_fee_id], references: [id])
+  application                                                        application?                @relation(fields: [application_id], references: [id])
+  balance_transaction                                                balance_transaction?        @relation(fields: [balance_transaction_id], references: [id])
+  customer                                                           customer?                   @relation(fields: [customer_id], references: [id])
+  account_accountTocharge_destination_id                             account?                    @relation("accountTocharge_destination_id", fields: [destination_id], references: [id])
+  dispute_charge_dispute_idTodispute                                 dispute?                    @relation("charge_dispute_idTodispute", fields: [dispute_id], references: [id])
+  invoice_charge_invoice_idToinvoice                                 invoice?                    @relation("charge_invoice_idToinvoice", fields: [invoice_id], references: [id])
+  account_accountTocharge_on_behalf_of_id                            account?                    @relation("accountTocharge_on_behalf_of_id", fields: [on_behalf_of_id], references: [id])
+  order_charge_order_idToorder                                       order?                      @relation("charge_order_idToorder", fields: [order_id], references: [id])
+  payment_intent                                                     payment_intent?             @relation(fields: [payment_intent_id], references: [id])
+  payment_method                                                     payment_method?             @relation(fields: [payment_method_id], references: [id])
+  review_charge_review_idToreview                                    review?                     @relation("charge_review_idToreview", fields: [review_id], references: [id])
+  transfer_charge_source_transfer_idTotransfer                       transfer?                   @relation("charge_source_transfer_idTotransfer", fields: [source_transfer_id], references: [id])
+  account_accountTocharge_transfer_data_destination_id               account?                    @relation("accountTocharge_transfer_data_destination_id", fields: [transfer_data_destination_id], references: [id])
+  transfer_charge_transfer_idTotransfer                              transfer?                   @relation("charge_transfer_idTotransfer", fields: [transfer_id], references: [id])
+  application_fee_application_fee_charge_idTocharge                  application_fee[]           @relation("application_fee_charge_idTocharge")
+  application_fee_application_fee_originating_transaction_idTocharge application_fee[]           @relation("application_fee_originating_transaction_idTocharge")
+  dispute_chargeTodispute_charge_id                                  dispute[]                   @relation("chargeTodispute_charge_id")
+  invoice_chargeToinvoice_charge_id                                  invoice[]                   @relation("chargeToinvoice_charge_id")
+  issuer_fraud_record                                                issuer_fraud_record[]
+  order_chargeToorder_charge_id                                      order[]                     @relation("chargeToorder_charge_id")
+  radar_early_fraud_warning                                          radar_early_fraud_warning[]
+  refund                                                             refund[]
+  review_chargeToreview_charge_id                                    review[]                    @relation("chargeToreview_charge_id")
+  transfer_chargeTotransfer_destination_payment_id                   transfer[]                  @relation("chargeTotransfer_destination_payment_id")
+  transfer_chargeTotransfer_source_transaction_id                    transfer[]                  @relation("chargeTotransfer_source_transaction_id")
+}
+
+model checkout_session {
+  id                                            String          @id
+  allow_promotion_codes                         Boolean?
+  amount_subtotal                               BigInt?
+  amount_total                                  BigInt?
+  billing_address_collection                    String?
+  cancel_url                                    String?
+  client_reference_id                           String?
+  currency                                      String?
+  customer_id                                   String?
+  customer_email                                String?
+  livemode                                      Boolean?
+  locale                                        String?
+  metadata                                      Json?
+  mode                                          String?
+  object                                        String?
+  payment_intent_id                             String?
+  payment_method_types                          String[]
+  payment_status                                String?
+  setup_intent_id                               String?
+  submit_type                                   String?
+  subscription_id                               String?
+  success_url                                   String?
+  shipping_address                              Json?
+  shipping_carrier                              String?
+  shipping_name                                 String?
+  shipping_phone                                String?
+  shipping_tracking_number                      String?
+  total_details_amount_discount                 BigInt?
+  total_details_amount_shipping                 BigInt?
+  total_details_amount_tax                      BigInt?
+  total_details_breakdown                       Json?
+  customer_details_email                        String?
+  customer_details_tax_exempt                   String?
+  customer_details_tax_ids                      Json?
+  shipping_address_collection_allowed_countries String[]
+  payment_method_options_acss_debit             Json?
+  customer                                      customer?       @relation(fields: [customer_id], references: [id])
+  payment_intent                                payment_intent? @relation(fields: [payment_intent_id], references: [id])
+  setup_intent                                  setup_intent?   @relation(fields: [setup_intent_id], references: [id])
+  subscription                                  subscription?   @relation(fields: [subscription_id], references: [id])
+}
+
+model connect_collection_transfer {
+  id             String   @id
+  amount         BigInt?
+  currency       String?
+  destination_id String?
+  livemode       Boolean?
+  object         String?
+  account        account? @relation(fields: [destination_id], references: [id])
+}
+
+model country_spec {
+  id                                String   @id
+  default_currency                  String?
+  object                            String?
+  supported_bank_account_currencies Json?
+  supported_payment_currencies      String[]
+  supported_payment_methods         String[]
+  supported_transfer_countries      String[]
+  verification_fields_company       Json?
+  verification_fields_individual    Json?
+}
+
+model coupon {
+  id                    String                  @id
+  amount_off            BigInt?
+  created               DateTime?               @db.Timestamp(6)
+  currency              String?
+  duration              String?
+  duration_in_months    BigInt?
+  livemode              Boolean?
+  max_redemptions       BigInt?
+  metadata              Json?
+  name                  String?
+  object                String?
+  percent_off           Decimal?                @db.Decimal
+  redeem_by             DateTime?               @db.Timestamp(6)
+  times_redeemed        BigInt?
+  valid                 Boolean?
+  deleted               Boolean?
+  applies_to_products   String[]
+  discount              discount[]
+  promotion_code        promotion_code[]
+  subscription_schedule subscription_schedule[]
+}
+
+model credit_note {
+  id                                                                                                     String                         @id
+  amount                                                                                                 BigInt?
+  created                                                                                                DateTime?                      @db.Timestamp(6)
+  currency                                                                                               String?
+  customer_id                                                                                            String?
+  customer_balance_transaction_id                                                                        String?
+  discount_amount                                                                                        BigInt?
+  invoice_id                                                                                             String?
+  livemode                                                                                               Boolean?
+  memo                                                                                                   String?
+  metadata                                                                                               Json?
+  number                                                                                                 String?
+  object                                                                                                 String?
+  out_of_band_amount                                                                                     BigInt?
+  pdf                                                                                                    String?
+  reason                                                                                                 String?
+  refund_id                                                                                              String?
+  status                                                                                                 String?
+  subtotal                                                                                               BigInt?
+  total                                                                                                  BigInt?
+  type                                                                                                   String?
+  voided_at                                                                                              DateTime?                      @db.Timestamp(6)
+  tax_amounts_amount                                                                                     BigInt?
+  tax_amounts_inclusive                                                                                  Boolean?
+  tax_amounts_tax_rate_id                                                                                String?
+  discount_amounts_amount                                                                                BigInt?
+  discount_amounts_discount_id                                                                           String?
+  customer_balance_transaction_credit_note_customer_balance_transaction_idTocustomer_balance_transaction customer_balance_transaction?  @relation("credit_note_customer_balance_transaction_idTocustomer_balance_transaction", fields: [customer_balance_transaction_id], references: [id])
+  customer                                                                                               customer?                      @relation(fields: [customer_id], references: [id])
+  discount                                                                                               discount?                      @relation(fields: [discount_amounts_discount_id], references: [id])
+  invoice                                                                                                invoice?                       @relation(fields: [invoice_id], references: [id])
+  refund                                                                                                 refund?                        @relation(fields: [refund_id], references: [id])
+  tax_rate                                                                                               tax_rate?                      @relation(fields: [tax_amounts_tax_rate_id], references: [id])
+  customer_balance_transaction_credit_noteTocustomer_balance_transaction_credit_note_id                  customer_balance_transaction[] @relation("credit_noteTocustomer_balance_transaction_credit_note_id")
+}
+
+model credit_note_line_item {
+  id                           String        @id
+  amount                       BigInt?
+  description                  String?
+  discount_amount              BigInt?
+  invoice_line_item            String?
+  livemode                     Boolean?
+  object                       String?
+  quantity                     BigInt?
+  type                         String?
+  unit_amount                  BigInt?
+  unit_amount_decimal          Decimal?      @db.Decimal
+  tax_amounts_amount           BigInt?
+  tax_amounts_inclusive        Boolean?
+  tax_amounts_tax_rate_id      String?
+  discount_amounts_amount      BigInt?
+  discount_amounts_discount_id String?
+  discount                     discount?     @relation(fields: [discount_amounts_discount_id], references: [id])
+  invoice_item                 invoice_item? @relation(fields: [invoice_line_item], references: [id])
+  tax_rate                     tax_rate?     @relation(fields: [tax_amounts_tax_rate_id], references: [id])
+}
+
+model customer {
+  id                                                                                 String                         @id
+  balance                                                                            BigInt?
+  created                                                                            DateTime?                      @db.Timestamp(6)
+  currency                                                                           String?
+  delinquent                                                                         Boolean?
+  description                                                                        String?
+  discount_id                                                                        String?
+  email                                                                              String?
+  invoice_prefix                                                                     String?
+  livemode                                                                           Boolean?
+  metadata                                                                           Json?
+  name                                                                               String?
+  next_invoice_sequence                                                              BigInt?
+  object                                                                             String?
+  phone                                                                              String?
+  preferred_locales                                                                  String[]
+  tax_exempt                                                                         String?
+  deleted                                                                            Boolean?
+  address_city                                                                       String?
+  address_country                                                                    String?
+  address_line1                                                                      String?
+  address_line2                                                                      String?
+  address_postal_code                                                                String?
+  address_state                                                                      String?
+  shipping_address                                                                   Json?
+  shipping_carrier                                                                   String?
+  shipping_name                                                                      String?
+  shipping_phone                                                                     String?
+  shipping_tracking_number                                                           String?
+  invoice_settings_custom_fields                                                     Json?
+  invoice_settings_default_payment_method_id                                         String?
+  invoice_settings_footer                                                            String?
+  discount_customer_discount_idTodiscount                                            discount?                      @relation("customer_discount_idTodiscount", fields: [discount_id], references: [id])
+  payment_method_customer_invoice_settings_default_payment_method_idTopayment_method payment_method?                @relation("customer_invoice_settings_default_payment_method_idTopayment_method", fields: [invoice_settings_default_payment_method_id], references: [id])
+  alipay_account                                                                     alipay_account[]
+  bank_account                                                                       bank_account[]
+  billing_portal_session                                                             billing_portal_session[]
+  bitcoin_receiver                                                                   bitcoin_receiver[]
+  card                                                                               card[]
+  charge                                                                             charge[]
+  checkout_session                                                                   checkout_session[]
+  credit_note                                                                        credit_note[]
+  customer_balance_transaction                                                       customer_balance_transaction[]
+  discount_customerTodiscount_customer_id                                            discount[]                     @relation("customerTodiscount_customer_id")
+  invoice                                                                            invoice[]
+  invoice_item                                                                       invoice_item[]
+  order                                                                              order[]
+  payment_intent                                                                     payment_intent[]
+  payment_method_customerTopayment_method_customer_id                                payment_method[]               @relation("customerTopayment_method_customer_id")
+  promotion_code                                                                     promotion_code[]
+  setup_attempt                                                                      setup_attempt[]
+  setup_intent                                                                       setup_intent[]
+  source                                                                             source[]
+  subscription                                                                       subscription[]
+  subscription_schedule                                                              subscription_schedule[]
+  tax_id                                                                             tax_id[]
+}
+
+model customer_balance_transaction {
+  id                                                                                    String        @id
+  amount                                                                                BigInt?
+  created                                                                               DateTime?     @db.Timestamp(6)
+  credit_note_id                                                                        String?
+  currency                                                                              String?
+  customer_id                                                                           String?
+  description                                                                           String?
+  ending_balance                                                                        BigInt?
+  invoice_id                                                                            String?
+  livemode                                                                              Boolean?
+  metadata                                                                              Json?
+  object                                                                                String?
+  type                                                                                  String?
+  credit_note_credit_noteTocustomer_balance_transaction_credit_note_id                  credit_note?  @relation("credit_noteTocustomer_balance_transaction_credit_note_id", fields: [credit_note_id], references: [id])
+  customer                                                                              customer?     @relation(fields: [customer_id], references: [id])
+  invoice                                                                               invoice?      @relation(fields: [invoice_id], references: [id])
+  credit_note_credit_note_customer_balance_transaction_idTocustomer_balance_transaction credit_note[] @relation("credit_note_customer_balance_transaction_idTocustomer_balance_transaction")
+}
+
+model discount {
+  id                                                           String                  @id
+  checkout_session                                             String?
+  coupon_id                                                    String?
+  customer_id                                                  String?
+  deleted                                                      Boolean?
+  invoice_id                                                   String?
+  invoice_item                                                 String?
+  object                                                       String?
+  promotion_code_id                                            String?
+  start                                                        DateTime?               @db.Timestamp(6)
+  subscription_id                                              String?
+  end                                                          DateTime?               @db.Timestamp(6)
+  coupon                                                       coupon?                 @relation(fields: [coupon_id], references: [id])
+  customer_customerTodiscount_customer_id                      customer?               @relation("customerTodiscount_customer_id", fields: [customer_id], references: [id])
+  invoice_discount_invoice_idToinvoice                         invoice?                @relation("discount_invoice_idToinvoice", fields: [invoice_id], references: [id])
+  promotion_code                                               promotion_code?         @relation(fields: [promotion_code_id], references: [id])
+  subscription_discount_subscription_idTosubscription          subscription?           @relation("discount_subscription_idTosubscription", fields: [subscription_id], references: [id])
+  credit_note                                                  credit_note[]
+  credit_note_line_item                                        credit_note_line_item[]
+  customer_customer_discount_idTodiscount                      customer[]              @relation("customer_discount_idTodiscount")
+  invoice_discountToinvoice_discount_id                        invoice[]               @relation("discountToinvoice_discount_id")
+  invoice_discountToinvoice_total_discount_amounts_discount_id invoice[]               @relation("discountToinvoice_total_discount_amounts_discount_id")
+  item                                                         item[]
+  line_item                                                    line_item[]
+  subscription_discountTosubscription_discount_id              subscription[]          @relation("discountTosubscription_discount_id")
+}
+
+model dispute {
+  id                                                            String          @id
+  amount                                                        BigInt?
+  charge_id                                                     String?
+  created                                                       DateTime?       @db.Timestamp(6)
+  currency                                                      String?
+  is_charge_refundable                                          Boolean?
+  livemode                                                      Boolean?
+  metadata                                                      Json?
+  network_reason_code                                           String?
+  object                                                        String?
+  payment_intent_id                                             String?
+  reason                                                        String?
+  status                                                        String?
+  evidence_access_activity_log                                  String?
+  evidence_billing_address                                      String?
+  evidence_cancellation_policy_id                               String?
+  evidence_cancellation_policy_disclosure                       String?
+  evidence_cancellation_rebuttal                                String?
+  evidence_customer_communication_id                            String?
+  evidence_customer_email_address                               String?
+  evidence_customer_name                                        String?
+  evidence_customer_purchase_ip                                 String?
+  evidence_customer_signature_id                                String?
+  evidence_duplicate_charge_documentation_id                    String?
+  evidence_duplicate_charge_explanation                         String?
+  evidence_duplicate_charge_id                                  String?
+  evidence_product_description                                  String?
+  evidence_receipt_id                                           String?
+  evidence_refund_policy_id                                     String?
+  evidence_refund_policy_disclosure                             String?
+  evidence_refund_refusal_explanation                           String?
+  evidence_service_date                                         String?
+  evidence_service_documentation_id                             String?
+  evidence_shipping_address                                     String?
+  evidence_shipping_carrier                                     String?
+  evidence_shipping_date                                        String?
+  evidence_shipping_documentation_id                            String?
+  evidence_shipping_tracking_number                             String?
+  evidence_uncategorized_file_id                                String?
+  evidence_uncategorized_text                                   String?
+  evidence_details_due_by                                       DateTime?       @db.Timestamp(6)
+  evidence_details_has_evidence                                 Boolean?
+  evidence_details_past_due                                     Boolean?
+  evidence_details_submission_count                             BigInt?
+  charge_chargeTodispute_charge_id                              charge?         @relation("chargeTodispute_charge_id", fields: [charge_id], references: [id])
+  file_dispute_evidence_cancellation_policy_idTofile            file?           @relation("dispute_evidence_cancellation_policy_idTofile", fields: [evidence_cancellation_policy_id], references: [id])
+  file_dispute_evidence_customer_communication_idTofile         file?           @relation("dispute_evidence_customer_communication_idTofile", fields: [evidence_customer_communication_id], references: [id])
+  file_dispute_evidence_customer_signature_idTofile             file?           @relation("dispute_evidence_customer_signature_idTofile", fields: [evidence_customer_signature_id], references: [id])
+  file_dispute_evidence_duplicate_charge_documentation_idTofile file?           @relation("dispute_evidence_duplicate_charge_documentation_idTofile", fields: [evidence_duplicate_charge_documentation_id], references: [id])
+  file_dispute_evidence_receipt_idTofile                        file?           @relation("dispute_evidence_receipt_idTofile", fields: [evidence_receipt_id], references: [id])
+  file_dispute_evidence_refund_policy_idTofile                  file?           @relation("dispute_evidence_refund_policy_idTofile", fields: [evidence_refund_policy_id], references: [id])
+  file_dispute_evidence_service_documentation_idTofile          file?           @relation("dispute_evidence_service_documentation_idTofile", fields: [evidence_service_documentation_id], references: [id])
+  file_dispute_evidence_shipping_documentation_idTofile         file?           @relation("dispute_evidence_shipping_documentation_idTofile", fields: [evidence_shipping_documentation_id], references: [id])
+  file_dispute_evidence_uncategorized_file_idTofile             file?           @relation("dispute_evidence_uncategorized_file_idTofile", fields: [evidence_uncategorized_file_id], references: [id])
+  payment_intent                                                payment_intent? @relation(fields: [payment_intent_id], references: [id])
+  charge_charge_dispute_idTodispute                             charge[]        @relation("charge_dispute_idTodispute")
+}
+
+model event {
+  id                       String    @id
+  account_id               String?
+  api_version              String?
+  created                  DateTime? @db.Timestamp(6)
+  livemode                 Boolean?
+  object                   String?
+  pending_webhooks         BigInt?
+  type                     String?
+  data_object              Json?
+  data_previous_attributes Json?
+  account                  account?  @relation(fields: [account_id], references: [id])
+}
+
+model fee_refund {
+  id                     String               @id
+  amount                 BigInt?
+  balance_transaction_id String?
+  created                DateTime?            @db.Timestamp(6)
+  currency               String?
+  fee_id                 String?
+  metadata               Json?
+  object                 String?
+  balance_transaction    balance_transaction? @relation(fields: [balance_transaction_id], references: [id])
+  application_fee        application_fee?     @relation(fields: [fee_id], references: [id])
+}
+
+model file {
+  id                                                               String                 @id
+  created                                                          DateTime?              @db.Timestamp(6)
+  expires_at                                                       DateTime?              @db.Timestamp(6)
+  filename                                                         String?
+  object                                                           String?
+  purpose                                                          String?
+  size                                                             BigInt?
+  title                                                            String?
+  type                                                             String?
+  url                                                              String?
+  dispute_dispute_evidence_cancellation_policy_idTofile            dispute[]              @relation("dispute_evidence_cancellation_policy_idTofile")
+  dispute_dispute_evidence_customer_communication_idTofile         dispute[]              @relation("dispute_evidence_customer_communication_idTofile")
+  dispute_dispute_evidence_customer_signature_idTofile             dispute[]              @relation("dispute_evidence_customer_signature_idTofile")
+  dispute_dispute_evidence_duplicate_charge_documentation_idTofile dispute[]              @relation("dispute_evidence_duplicate_charge_documentation_idTofile")
+  dispute_dispute_evidence_receipt_idTofile                        dispute[]              @relation("dispute_evidence_receipt_idTofile")
+  dispute_dispute_evidence_refund_policy_idTofile                  dispute[]              @relation("dispute_evidence_refund_policy_idTofile")
+  dispute_dispute_evidence_service_documentation_idTofile          dispute[]              @relation("dispute_evidence_service_documentation_idTofile")
+  dispute_dispute_evidence_shipping_documentation_idTofile         dispute[]              @relation("dispute_evidence_shipping_documentation_idTofile")
+  dispute_dispute_evidence_uncategorized_file_idTofile             dispute[]              @relation("dispute_evidence_uncategorized_file_idTofile")
+  file_link                                                        file_link[]
+  reporting_report_run                                             reporting_report_run[]
+  scheduled_query_run                                              scheduled_query_run[]
+}
+
+model file_link {
+  id         String    @id
+  created    DateTime? @db.Timestamp(6)
+  expired    Boolean?
+  expires_at DateTime? @db.Timestamp(6)
+  file_id    String?
+  livemode   Boolean?
+  metadata   Json?
+  object     String?
+  url        String?
+  file       file?     @relation(fields: [file_id], references: [id])
+}
+
+model invoice {
+  id                                                                               String                         @id
+  deleted                                                                          Boolean?
+  object                                                                           String?
+  account_country                                                                  String?
+  account_name                                                                     String?
+  account_tax_ids                                                                  String[]
+  amount_due                                                                       BigInt?
+  amount_paid                                                                      BigInt?
+  amount_remaining                                                                 BigInt?
+  application_fee_amount                                                           BigInt?
+  attempt_count                                                                    BigInt?
+  attempted                                                                        Boolean?
+  auto_advance                                                                     Boolean?
+  billing_reason                                                                   String?
+  charge_id                                                                        String?
+  collection_method                                                                String?
+  created                                                                          DateTime?                      @db.Timestamp(6)
+  currency                                                                         String?
+  customer_id                                                                      String?
+  customer_email                                                                   String?
+  customer_name                                                                    String?
+  customer_phone                                                                   String?
+  customer_tax_exempt                                                              String?
+  default_payment_method_id                                                        String?
+  description                                                                      String?
+  discount_id                                                                      String?
+  discounts                                                                        String[]
+  due_date                                                                         DateTime?                      @db.Timestamp(6)
+  ending_balance                                                                   BigInt?
+  footer                                                                           String?
+  hosted_invoice_url                                                               String?
+  invoice_pdf                                                                      String?
+  livemode                                                                         Boolean?
+  metadata                                                                         Json?
+  next_payment_attempt                                                             DateTime?                      @db.Timestamp(6)
+  number                                                                           String?
+  on_behalf_of_id                                                                  String?
+  paid                                                                             Boolean?
+  payment_intent_id                                                                String?
+  period_end                                                                       DateTime?                      @db.Timestamp(6)
+  period_start                                                                     DateTime?                      @db.Timestamp(6)
+  post_payment_credit_notes_amount                                                 BigInt?
+  pre_payment_credit_notes_amount                                                  BigInt?
+  receipt_number                                                                   String?
+  starting_balance                                                                 BigInt?
+  statement_descriptor                                                             String?
+  status                                                                           String?
+  subscription_id                                                                  String?
+  subscription_proration_date                                                      BigInt?
+  subtotal                                                                         BigInt?
+  tax                                                                              BigInt?
+  total                                                                            BigInt?
+  webhooks_delivered_at                                                            DateTime?                      @db.Timestamp(6)
+  custom_fields_name                                                               String?
+  custom_fields_value                                                              String?
+  customer_shipping_address                                                        Json?
+  customer_shipping_carrier                                                        String?
+  customer_shipping_name                                                           String?
+  customer_shipping_phone                                                          String?
+  customer_shipping_tracking_number                                                String?
+  payment_settings_payment_method_options                                          Json?
+  payment_settings_payment_method_types                                            String[]
+  status_transitions_finalized_at                                                  DateTime?                      @db.Timestamp(6)
+  status_transitions_marked_uncollectible_at                                       DateTime?                      @db.Timestamp(6)
+  status_transitions_paid_at                                                       DateTime?                      @db.Timestamp(6)
+  status_transitions_voided_at                                                     DateTime?                      @db.Timestamp(6)
+  total_discount_amounts_amount                                                    BigInt?
+  total_discount_amounts_discount_id                                               String?
+  customer_address_city                                                            String?
+  customer_address_country                                                         String?
+  customer_address_line1                                                           String?
+  customer_address_line2                                                           String?
+  customer_address_postal_code                                                     String?
+  customer_address_state                                                           String?
+  last_finalization_error_charge                                                   String?
+  last_finalization_error_code                                                     String?
+  last_finalization_error_decline_code                                             String?
+  last_finalization_error_doc_url                                                  String?
+  last_finalization_error_message                                                  String?
+  last_finalization_error_param                                                    String?
+  last_finalization_error_payment_intent_id                                        String?
+  last_finalization_error_payment_method_id                                        String?
+  last_finalization_error_payment_method_type                                      String?
+  last_finalization_error_setup_intent_id                                          String?
+  last_finalization_error_source                                                   Json?
+  last_finalization_error_type                                                     String?
+  threshold_reason_amount_gte                                                      BigInt?
+  threshold_reason_item_reasons                                                    Json?
+  total_tax_amounts_amount                                                         BigInt?
+  total_tax_amounts_inclusive                                                      Boolean?
+  total_tax_amounts_tax_rate_id                                                    String?
+  customer_tax_ids_type                                                            String?
+  customer_tax_ids_value                                                           String?
+  transfer_data_amount                                                             BigInt?
+  transfer_data_destination_id                                                     String?
+  charge_chargeToinvoice_charge_id                                                 charge?                        @relation("chargeToinvoice_charge_id", fields: [charge_id], references: [id])
+  customer                                                                         customer?                      @relation(fields: [customer_id], references: [id])
+  payment_method_invoice_default_payment_method_idTopayment_method                 payment_method?                @relation("invoice_default_payment_method_idTopayment_method", fields: [default_payment_method_id], references: [id])
+  discount_discountToinvoice_discount_id                                           discount?                      @relation("discountToinvoice_discount_id", fields: [discount_id], references: [id])
+  payment_intent_invoice_last_finalization_error_payment_intent_idTopayment_intent payment_intent?                @relation("invoice_last_finalization_error_payment_intent_idTopayment_intent", fields: [last_finalization_error_payment_intent_id], references: [id])
+  payment_method_invoice_last_finalization_error_payment_method_idTopayment_method payment_method?                @relation("invoice_last_finalization_error_payment_method_idTopayment_method", fields: [last_finalization_error_payment_method_id], references: [id])
+  setup_intent                                                                     setup_intent?                  @relation(fields: [last_finalization_error_setup_intent_id], references: [id])
+  account_accountToinvoice_on_behalf_of_id                                         account?                       @relation("accountToinvoice_on_behalf_of_id", fields: [on_behalf_of_id], references: [id])
+  payment_intent_invoice_payment_intent_idTopayment_intent                         payment_intent?                @relation("invoice_payment_intent_idTopayment_intent", fields: [payment_intent_id], references: [id])
+  subscription_invoice_subscription_idTosubscription                               subscription?                  @relation("invoice_subscription_idTosubscription", fields: [subscription_id], references: [id])
+  discount_discountToinvoice_total_discount_amounts_discount_id                    discount?                      @relation("discountToinvoice_total_discount_amounts_discount_id", fields: [total_discount_amounts_discount_id], references: [id])
+  tax_rate                                                                         tax_rate?                      @relation(fields: [total_tax_amounts_tax_rate_id], references: [id])
+  account_accountToinvoice_transfer_data_destination_id                            account?                       @relation("accountToinvoice_transfer_data_destination_id", fields: [transfer_data_destination_id], references: [id])
+  charge_charge_invoice_idToinvoice                                                charge[]                       @relation("charge_invoice_idToinvoice")
+  credit_note                                                                      credit_note[]
+  customer_balance_transaction                                                     customer_balance_transaction[]
+  discount_discount_invoice_idToinvoice                                            discount[]                     @relation("discount_invoice_idToinvoice")
+  invoice_item                                                                     invoice_item[]
+  payment_intent_invoiceTopayment_intent_invoice_id                                payment_intent[]               @relation("invoiceTopayment_intent_invoice_id")
+  subscription_invoiceTosubscription_latest_invoice_id                             subscription[]                 @relation("invoiceTosubscription_latest_invoice_id")
+  usage_record_summary                                                             usage_record_summary[]
+}
+
+model invoice_item {
+  id                    String                  @id
+  deleted               Boolean?
+  object                String?
+  amount                BigInt?
+  currency              String?
+  customer_id           String?
+  date                  DateTime?               @db.Timestamp(6)
+  description           String?
+  discountable          Boolean?
+  discounts             String[]
+  invoice_id            String?
+  livemode              Boolean?
+  metadata              Json?
+  plan_id               String?
+  price_id              String?
+  proration             Boolean?
+  quantity              BigInt?
+  subscription_id       String?
+  subscription_item_id  String?
+  unit_amount           BigInt?
+  unit_amount_decimal   Decimal?                @db.Decimal
+  period_end            DateTime?               @db.Timestamp(6)
+  period_start          DateTime?               @db.Timestamp(6)
+  customer              customer?               @relation(fields: [customer_id], references: [id])
+  invoice               invoice?                @relation(fields: [invoice_id], references: [id])
+  plan                  plan?                   @relation(fields: [plan_id], references: [id])
+  price                 price?                  @relation(fields: [price_id], references: [id])
+  subscription          subscription?           @relation(fields: [subscription_id], references: [id])
+  subscription_item     subscription_item?      @relation(fields: [subscription_item_id], references: [id])
+  credit_note_line_item credit_note_line_item[]
+}
+
+model issuer_fraud_record {
+  id                  String    @id
+  actionable          Boolean?
+  charge_id           String?
+  created             DateTime? @db.Timestamp(6)
+  fraud_type          String?
+  has_liability_shift Boolean?
+  livemode            Boolean?
+  object              String?
+  post_date           BigInt?
+  charge              charge?   @relation(fields: [charge_id], references: [id])
+}
+
+model issuing_authorization {
+  id                                          String                @id
+  amount                                      BigInt?
+  approved                                    Boolean?
+  authorization_method                        String?
+  card_id                                     String?
+  cardholder_id                               String?
+  created                                     DateTime?             @db.Timestamp(6)
+  currency                                    String?
+  livemode                                    Boolean?
+  merchant_amount                             BigInt?
+  merchant_currency                           String?
+  metadata                                    Json?
+  object                                      String?
+  status                                      String?
+  wallet                                      String?
+  verification_data_address_line1_check       String?
+  verification_data_address_postal_code_check String?
+  verification_data_cvc_check                 String?
+  verification_data_expiry_check              String?
+  amount_details_atm_fee                      BigInt?
+  request_history_amount                      BigInt?
+  request_history_amount_details              Json?
+  request_history_approved                    Boolean?
+  request_history_created                     DateTime?             @db.Timestamp(6)
+  request_history_currency                    String?
+  request_history_merchant_amount             BigInt?
+  request_history_merchant_currency           String?
+  request_history_reason                      String?
+  pending_request_amount                      BigInt?
+  pending_request_amount_details              Json?
+  pending_request_currency                    String?
+  pending_request_is_amount_controllable      Boolean?
+  pending_request_merchant_amount             BigInt?
+  pending_request_merchant_currency           String?
+  merchant_data_category                      String?
+  merchant_data_city                          String?
+  merchant_data_country                       String?
+  merchant_data_name                          String?
+  merchant_data_network_id                    String?
+  merchant_data_postal_code                   String?
+  merchant_data_state                         String?
+  issuing_card                                issuing_card?         @relation(fields: [card_id], references: [id])
+  issuing_cardholder                          issuing_cardholder?   @relation(fields: [cardholder_id], references: [id])
+  issuing_transaction                         issuing_transaction[]
+}
+
+model issuing_card {
+  id                                                               String                  @id
+  brand                                                            String?
+  cancellation_reason                                              String?
+  cardholder_id                                                    String?
+  created                                                          DateTime?               @db.Timestamp(6)
+  currency                                                         String?
+  cvc                                                              String?
+  exp_month                                                        BigInt?
+  exp_year                                                         BigInt?
+  last4                                                            String?
+  livemode                                                         Boolean?
+  metadata                                                         Json?
+  number                                                           String?
+  object                                                           String?
+  replaced_by_id                                                   String?
+  replacement_for_id                                               String?
+  replacement_reason                                               String?
+  status                                                           String?
+  type                                                             String?
+  shipping_address                                                 Json?
+  shipping_carrier                                                 String?
+  shipping_eta                                                     DateTime?               @db.Timestamp(6)
+  shipping_name                                                    String?
+  shipping_service                                                 String?
+  shipping_status                                                  String?
+  shipping_tracking_number                                         String?
+  shipping_tracking_url                                            String?
+  shipping_type                                                    String?
+  spending_controls_allowed_categories                             String[]
+  spending_controls_blocked_categories                             String[]
+  spending_controls_spending_limits                                Json?
+  spending_controls_spending_limits_currency                       String?
+  issuing_cardholder                                               issuing_cardholder?     @relation(fields: [cardholder_id], references: [id])
+  issuing_card_issuing_cardToissuing_card_replaced_by_id           issuing_card?           @relation("issuing_cardToissuing_card_replaced_by_id", fields: [replaced_by_id], references: [id])
+  issuing_card_issuing_cardToissuing_card_replacement_for_id       issuing_card?           @relation("issuing_cardToissuing_card_replacement_for_id", fields: [replacement_for_id], references: [id])
+  issuing_authorization                                            issuing_authorization[]
+  other_issuing_card_issuing_cardToissuing_card_replaced_by_id     issuing_card[]          @relation("issuing_cardToissuing_card_replaced_by_id")
+  other_issuing_card_issuing_cardToissuing_card_replacement_for_id issuing_card[]          @relation("issuing_cardToissuing_card_replacement_for_id")
+  issuing_transaction                                              issuing_transaction[]
+}
+
+model issuing_cardholder {
+  id                                         String                  @id
+  created                                    DateTime?               @db.Timestamp(6)
+  email                                      String?
+  livemode                                   Boolean?
+  metadata                                   Json?
+  name                                       String?
+  object                                     String?
+  phone_number                               String?
+  status                                     String?
+  type                                       String?
+  billing_address                            Json?
+  requirements_disabled_reason               String?
+  requirements_past_due                      String[]
+  spending_controls_allowed_categories       String[]
+  spending_controls_blocked_categories       String[]
+  spending_controls_spending_limits          Json?
+  spending_controls_spending_limits_currency String?
+  individual_dob                             Json?
+  individual_first_name                      String?
+  individual_last_name                       String?
+  individual_verification                    Json?
+  company_tax_id_provided                    Boolean?
+  issuing_authorization                      issuing_authorization[]
+  issuing_card                               issuing_card[]
+  issuing_transaction                        issuing_transaction[]
+}
+
+model issuing_dispute {
+  id                                                                      String                @id
+  amount                                                                  BigInt?
+  created                                                                 DateTime?             @db.Timestamp(6)
+  currency                                                                String?
+  livemode                                                                Boolean?
+  metadata                                                                Json?
+  object                                                                  String?
+  status                                                                  String?
+  transaction_id                                                          String?
+  evidence_canceled                                                       Json?
+  evidence_duplicate                                                      Json?
+  evidence_fraudulent                                                     Json?
+  evidence_merchandise_not_as_described                                   Json?
+  evidence_not_received                                                   Json?
+  evidence_other                                                          Json?
+  evidence_reason                                                         String?
+  evidence_service_not_as_described                                       Json?
+  issuing_transaction_issuing_dispute_transaction_idToissuing_transaction issuing_transaction?  @relation("issuing_dispute_transaction_idToissuing_transaction", fields: [transaction_id], references: [id])
+  issuing_transaction_issuing_disputeToissuing_transaction_dispute_id     issuing_transaction[] @relation("issuing_disputeToissuing_transaction_dispute_id")
+}
+
+model issuing_transaction {
+  id                                                                  String                 @id
+  amount                                                              BigInt?
+  authorization_id                                                    String?
+  balance_transaction_id                                              String?
+  card_id                                                             String?
+  cardholder_id                                                       String?
+  created                                                             DateTime?              @db.Timestamp(6)
+  currency                                                            String?
+  dispute_id                                                          String?
+  livemode                                                            Boolean?
+  merchant_amount                                                     BigInt?
+  merchant_currency                                                   String?
+  metadata                                                            Json?
+  object                                                              String?
+  type                                                                String?
+  amount_details_atm_fee                                              BigInt?
+  purchase_details_flight                                             Json?
+  purchase_details_fuel                                               Json?
+  purchase_details_lodging                                            Json?
+  purchase_details_receipt                                            Json?
+  purchase_details_reference                                          String?
+  merchant_data_category                                              String?
+  merchant_data_city                                                  String?
+  merchant_data_country                                               String?
+  merchant_data_name                                                  String?
+  merchant_data_network_id                                            String?
+  merchant_data_postal_code                                           String?
+  merchant_data_state                                                 String?
+  issuing_authorization                                               issuing_authorization? @relation(fields: [authorization_id], references: [id])
+  balance_transaction                                                 balance_transaction?   @relation(fields: [balance_transaction_id], references: [id])
+  issuing_card                                                        issuing_card?          @relation(fields: [card_id], references: [id])
+  issuing_cardholder                                                  issuing_cardholder?    @relation(fields: [cardholder_id], references: [id])
+  issuing_dispute_issuing_disputeToissuing_transaction_dispute_id     issuing_dispute?       @relation("issuing_disputeToissuing_transaction_dispute_id", fields: [dispute_id], references: [id])
+  issuing_dispute_issuing_dispute_transaction_idToissuing_transaction issuing_dispute[]      @relation("issuing_dispute_transaction_idToissuing_transaction")
+}
+
+model item {
+  id                    String    @id
+  amount_subtotal       BigInt?
+  amount_total          BigInt?
+  currency              String?
+  description           String?
+  object                String?
+  price_id              String?
+  quantity              BigInt?
+  taxes_amount          BigInt?
+  taxes_rate_id         String?
+  discounts_amount      BigInt?
+  discounts_discount_id String?
+  discount              discount? @relation(fields: [discounts_discount_id], references: [id])
+  price                 price?    @relation(fields: [price_id], references: [id])
+  tax_rate              tax_rate? @relation(fields: [taxes_rate_id], references: [id])
+}
+
+model line_item {
+  id                           String             @id
+  amount                       BigInt?
+  currency                     String?
+  description                  String?
+  discountable                 Boolean?
+  discounts                    String[]
+  invoice_item                 String?
+  livemode                     Boolean?
+  metadata                     Json?
+  object                       String?
+  plan_id                      String?
+  price_id                     String?
+  proration                    Boolean?
+  quantity                     BigInt?
+  subscription_id              String?
+  subscription_item_id         String?
+  type                         String?
+  discount_amounts_amount      BigInt?
+  discount_amounts_discount_id String?
+  period_end                   DateTime?          @db.Timestamp(6)
+  period_start                 DateTime?          @db.Timestamp(6)
+  tax_amounts_amount           BigInt?
+  tax_amounts_inclusive        Boolean?
+  tax_amounts_tax_rate_id      String?
+  discount                     discount?          @relation(fields: [discount_amounts_discount_id], references: [id])
+  plan                         plan?              @relation(fields: [plan_id], references: [id])
+  price                        price?             @relation(fields: [price_id], references: [id])
+  subscription                 subscription?      @relation(fields: [subscription_id], references: [id])
+  subscription_item            subscription_item? @relation(fields: [subscription_item_id], references: [id])
+  tax_rate                     tax_rate?          @relation(fields: [tax_amounts_tax_rate_id], references: [id])
+}
+
+model mandate {
+  id                                                       String          @id
+  livemode                                                 Boolean?
+  object                                                   String?
+  payment_method_id                                        String?
+  status                                                   String?
+  type                                                     String?
+  customer_acceptance_accepted_at                          DateTime?       @db.Timestamp(6)
+  customer_acceptance_offline                              Json?
+  customer_acceptance_online                               Json?
+  customer_acceptance_type                                 String?
+  single_use_amount                                        BigInt?
+  single_use_currency                                      String?
+  payment_method_details_acss_debit                        Json?
+  payment_method_details_au_becs_debit                     Json?
+  payment_method_details_bacs_debit                        Json?
+  payment_method_details_card                              Json?
+  payment_method_details_sepa_debit                        Json?
+  payment_method_details_type                              String?
+  payment_method                                           payment_method? @relation(fields: [payment_method_id], references: [id])
+  setup_intent_mandateTosetup_intent_mandate_id            setup_intent[]  @relation("mandateTosetup_intent_mandate_id")
+  setup_intent_mandateTosetup_intent_single_use_mandate_id setup_intent[]  @relation("mandateTosetup_intent_single_use_mandate_id")
+}
+
+model order {
+  id                             String         @id
+  amount                         BigInt?
+  amount_returned                BigInt?
+  application_id                 String?
+  application_fee                BigInt?
+  charge_id                      String?
+  created                        DateTime?      @db.Timestamp(6)
+  currency                       String?
+  customer_id                    String?
+  email                          String?
+  external_coupon_code           String?
+  livemode                       Boolean?
+  metadata                       Json?
+  object                         String?
+  selected_shipping_method       String?
+  status                         String?
+  updated                        DateTime?      @db.Timestamp(6)
+  upstream_id                    String?
+  shipping_address               Json?
+  shipping_carrier               String?
+  shipping_name                  String?
+  shipping_phone                 String?
+  shipping_tracking_number       String?
+  items_amount                   BigInt?
+  items_currency                 String?
+  items_description              String?
+  items_object                   String?
+  items_parent_id                String?
+  items_quantity                 BigInt?
+  items_type                     String?
+  status_transitions_canceled    DateTime?      @db.Timestamp(6)
+  status_transitions_fulfiled    DateTime?      @db.Timestamp(6)
+  status_transitions_paid        DateTime?      @db.Timestamp(6)
+  status_transitions_returned    DateTime?      @db.Timestamp(6)
+  application                    application?   @relation(fields: [application_id], references: [id])
+  charge_chargeToorder_charge_id charge?        @relation("chargeToorder_charge_id", fields: [charge_id], references: [id])
+  customer                       customer?      @relation(fields: [customer_id], references: [id])
+  sku                            sku?           @relation(fields: [items_parent_id], references: [id])
+  charge_charge_order_idToorder  charge[]       @relation("charge_order_idToorder")
+  order_return                   order_return[]
+}
+
+model order_item {
+  id          String  @id
+  amount      BigInt?
+  currency    String?
+  description String?
+  object      String?
+  parent_id   String?
+  quantity    BigInt?
+  type        String?
+  sku         sku?    @relation(fields: [parent_id], references: [id])
+}
+
+model order_return {
+  id                String    @id
+  amount            BigInt?
+  created           DateTime? @db.Timestamp(6)
+  currency          String?
+  livemode          Boolean?
+  object            String?
+  order_id          String?
+  refund_id         String?
+  items_amount      BigInt?
+  items_currency    String?
+  items_description String?
+  items_object      String?
+  items_parent_id   String?
+  items_quantity    BigInt?
+  items_type        String?
+  sku               sku?      @relation(fields: [items_parent_id], references: [id])
+  order             order?    @relation(fields: [order_id], references: [id])
+  refund            refund?   @relation(fields: [refund_id], references: [id])
+}
+
+model payment_intent {
+  id                                                                                 String                      @id
+  amount                                                                             BigInt?
+  amount_capturable                                                                  BigInt?
+  amount_received                                                                    BigInt?
+  application_id                                                                     String?
+  application_fee_amount                                                             BigInt?
+  canceled_at                                                                        DateTime?                   @db.Timestamp(6)
+  cancellation_reason                                                                String?
+  capture_method                                                                     String?
+  client_secret                                                                      String?
+  confirmation_method                                                                String?
+  created                                                                            DateTime?                   @db.Timestamp(6)
+  currency                                                                           String?
+  customer_id                                                                        String?
+  description                                                                        String?
+  invoice_id                                                                         String?
+  livemode                                                                           Boolean?
+  metadata                                                                           Json?
+  object                                                                             String?
+  on_behalf_of_id                                                                    String?
+  payment_method_id                                                                  String?
+  payment_method_types                                                               String[]
+  receipt_email                                                                      String?
+  review_id                                                                          String?
+  setup_future_usage                                                                 String?
+  statement_descriptor                                                               String?
+  statement_descriptor_suffix                                                        String?
+  status                                                                             String?
+  transfer_group                                                                     String?
+  shipping_address                                                                   Json?
+  shipping_carrier                                                                   String?
+  shipping_name                                                                      String?
+  shipping_phone                                                                     String?
+  shipping_tracking_number                                                           String?
+  payment_method_options_acss_debit                                                  Json?
+  payment_method_options_afterpay_clearpay                                           Json?
+  payment_method_options_alipay                                                      Json?
+  payment_method_options_bancontact                                                  Json?
+  payment_method_options_card                                                        Json?
+  payment_method_options_card_present                                                Json?
+  payment_method_options_oxxo                                                        Json?
+  payment_method_options_p24                                                         Json?
+  payment_method_options_sepa_debit                                                  Json?
+  payment_method_options_sofort                                                      Json?
+  transfer_data_amount                                                               BigInt?
+  transfer_data_destination_id                                                       String?
+  last_payment_error_charge                                                          String?
+  last_payment_error_code                                                            String?
+  last_payment_error_decline_code                                                    String?
+  last_payment_error_doc_url                                                         String?
+  last_payment_error_message                                                         String?
+  last_payment_error_param                                                           String?
+  last_payment_error_payment_intent_id                                               String?
+  last_payment_error_payment_method_id                                               String?
+  last_payment_error_payment_method_type                                             String?
+  last_payment_error_setup_intent_id                                                 String?
+  last_payment_error_source                                                          Json?
+  last_payment_error_type                                                            String?
+  next_action_alipay_handle_redirect                                                 Json?
+  next_action_oxxo_display_details                                                   Json?
+  next_action_redirect_to_url                                                        Json?
+  next_action_type                                                                   String?
+  next_action_use_stripe_sdk                                                         Json?
+  next_action_verify_with_microdeposits                                              Json?
+  application                                                                        application?                @relation(fields: [application_id], references: [id])
+  customer                                                                           customer?                   @relation(fields: [customer_id], references: [id])
+  invoice_invoiceTopayment_intent_invoice_id                                         invoice?                    @relation("invoiceTopayment_intent_invoice_id", fields: [invoice_id], references: [id])
+  payment_intent                                                                     payment_intent?             @relation("payment_intentTopayment_intent_last_payment_error_payment_intent_id", fields: [last_payment_error_payment_intent_id], references: [id])
+  payment_method_payment_intent_last_payment_error_payment_method_idTopayment_method payment_method?             @relation("payment_intent_last_payment_error_payment_method_idTopayment_method", fields: [last_payment_error_payment_method_id], references: [id])
+  setup_intent_payment_intent_last_payment_error_setup_intent_idTosetup_intent       setup_intent?               @relation("payment_intent_last_payment_error_setup_intent_idTosetup_intent", fields: [last_payment_error_setup_intent_id], references: [id])
+  account_accountTopayment_intent_on_behalf_of_id                                    account?                    @relation("accountTopayment_intent_on_behalf_of_id", fields: [on_behalf_of_id], references: [id])
+  payment_method_payment_intent_payment_method_idTopayment_method                    payment_method?             @relation("payment_intent_payment_method_idTopayment_method", fields: [payment_method_id], references: [id])
+  review_payment_intent_review_idToreview                                            review?                     @relation("payment_intent_review_idToreview", fields: [review_id], references: [id])
+  account_accountTopayment_intent_transfer_data_destination_id                       account?                    @relation("accountTopayment_intent_transfer_data_destination_id", fields: [transfer_data_destination_id], references: [id])
+  charge                                                                             charge[]
+  checkout_session                                                                   checkout_session[]
+  dispute                                                                            dispute[]
+  invoice_invoice_last_finalization_error_payment_intent_idTopayment_intent          invoice[]                   @relation("invoice_last_finalization_error_payment_intent_idTopayment_intent")
+  invoice_invoice_payment_intent_idTopayment_intent                                  invoice[]                   @relation("invoice_payment_intent_idTopayment_intent")
+  other_payment_intent                                                               payment_intent[]            @relation("payment_intentTopayment_intent_last_payment_error_payment_intent_id")
+  radar_early_fraud_warning                                                          radar_early_fraud_warning[]
+  refund                                                                             refund[]
+  review_payment_intentToreview_payment_intent_id                                    review[]                    @relation("payment_intentToreview_payment_intent_id")
+  setup_attempt                                                                      setup_attempt[]
+  setup_intent_payment_intentTosetup_intent_last_setup_error_payment_intent_id       setup_intent[]              @relation("payment_intentTosetup_intent_last_setup_error_payment_intent_id")
+}
+
+model payment_method {
+  id                                                                                                     String                  @id
+  created                                                                                                DateTime?               @db.Timestamp(6)
+  customer_id                                                                                            String?
+  livemode                                                                                               Boolean?
+  metadata                                                                                               Json?
+  object                                                                                                 String?
+  type                                                                                                   String?
+  sofort_country                                                                                         String?
+  billing_details_address                                                                                Json?
+  billing_details_email                                                                                  String?
+  billing_details_name                                                                                   String?
+  billing_details_phone                                                                                  String?
+  bacs_debit_fingerprint                                                                                 String?
+  bacs_debit_last4                                                                                       String?
+  bacs_debit_sort_code                                                                                   String?
+  eps_bank                                                                                               String?
+  fpx_account_holder_type                                                                                String?
+  fpx_bank                                                                                               String?
+  ideal_bank                                                                                             String?
+  ideal_bic                                                                                              String?
+  card_brand                                                                                             String?
+  card_checks                                                                                            Json?
+  card_country                                                                                           String?
+  card_description                                                                                       String?
+  card_exp_month                                                                                         BigInt?
+  card_exp_year                                                                                          BigInt?
+  card_fingerprint                                                                                       String?
+  card_funding                                                                                           String?
+  card_iin                                                                                               String?
+  card_issuer                                                                                            String?
+  card_last4                                                                                             String?
+  card_networks                                                                                          Json?
+  card_three_d_secure_usage                                                                              Json?
+  card_wallet                                                                                            Json?
+  sepa_debit_bank_code                                                                                   String?
+  sepa_debit_branch_code                                                                                 String?
+  sepa_debit_country                                                                                     String?
+  sepa_debit_fingerprint                                                                                 String?
+  sepa_debit_generated_from                                                                              Json?
+  sepa_debit_last4                                                                                       String?
+  acss_debit_bank_name                                                                                   String?
+  acss_debit_fingerprint                                                                                 String?
+  acss_debit_institution_number                                                                          String?
+  acss_debit_last4                                                                                       String?
+  acss_debit_transit_number                                                                              String?
+  au_becs_debit_bsb_number                                                                               String?
+  au_becs_debit_fingerprint                                                                              String?
+  au_becs_debit_last4                                                                                    String?
+  p24_bank                                                                                               String?
+  customer_customerTopayment_method_customer_id                                                          customer?               @relation("customerTopayment_method_customer_id", fields: [customer_id], references: [id])
+  charge                                                                                                 charge[]
+  customer_customer_invoice_settings_default_payment_method_idTopayment_method                           customer[]              @relation("customer_invoice_settings_default_payment_method_idTopayment_method")
+  invoice_invoice_default_payment_method_idTopayment_method                                              invoice[]               @relation("invoice_default_payment_method_idTopayment_method")
+  invoice_invoice_last_finalization_error_payment_method_idTopayment_method                              invoice[]               @relation("invoice_last_finalization_error_payment_method_idTopayment_method")
+  mandate                                                                                                mandate[]
+  payment_intent_payment_intent_last_payment_error_payment_method_idTopayment_method                     payment_intent[]        @relation("payment_intent_last_payment_error_payment_method_idTopayment_method")
+  payment_intent_payment_intent_payment_method_idTopayment_method                                        payment_intent[]        @relation("payment_intent_payment_method_idTopayment_method")
+  setup_attempt_payment_methodTosetup_attempt_payment_method_id                                          setup_attempt[]         @relation("payment_methodTosetup_attempt_payment_method_id")
+  setup_attempt_payment_methodTosetup_attempt_setup_error_payment_method_id                              setup_attempt[]         @relation("payment_methodTosetup_attempt_setup_error_payment_method_id")
+  setup_intent_payment_methodTosetup_intent_last_setup_error_payment_method_id                           setup_intent[]          @relation("payment_methodTosetup_intent_last_setup_error_payment_method_id")
+  setup_intent_payment_methodTosetup_intent_payment_method_id                                            setup_intent[]          @relation("payment_methodTosetup_intent_payment_method_id")
+  subscription                                                                                           subscription[]
+  subscription_schedule_payment_methodTosubscription_schedule_default_settings_default_payment_method_id subscription_schedule[] @relation("payment_methodTosubscription_schedule_default_settings_default_payment_method_id")
+  subscription_schedule_payment_methodTosubscription_schedule_phases_default_payment_method_id           subscription_schedule[] @relation("payment_methodTosubscription_schedule_phases_default_payment_method_id")
+}
+
+model payout {
+  id                                                                             String               @id
+  amount                                                                         BigInt?
+  arrival_date                                                                   DateTime?            @db.Timestamp(6)
+  automatic                                                                      Boolean?
+  balance_transaction_id                                                         String?
+  created                                                                        DateTime?            @db.Timestamp(6)
+  currency                                                                       String?
+  description                                                                    String?
+  failure_balance_transaction_id                                                 String?
+  failure_code                                                                   String?
+  failure_message                                                                String?
+  livemode                                                                       Boolean?
+  metadata                                                                       Json?
+  method                                                                         String?
+  object                                                                         String?
+  original_payout_id                                                             String?
+  reversed_by_id                                                                 String?
+  source_type                                                                    String?
+  statement_descriptor                                                           String?
+  status                                                                         String?
+  type                                                                           String?
+  balance_transaction_balance_transactionTopayout_balance_transaction_id         balance_transaction? @relation("balance_transactionTopayout_balance_transaction_id", fields: [balance_transaction_id], references: [id])
+  balance_transaction_balance_transactionTopayout_failure_balance_transaction_id balance_transaction? @relation("balance_transactionTopayout_failure_balance_transaction_id", fields: [failure_balance_transaction_id], references: [id])
+  payout_payoutTopayout_original_payout_id                                       payout?              @relation("payoutTopayout_original_payout_id", fields: [original_payout_id], references: [id])
+  payout_payoutTopayout_reversed_by_id                                           payout?              @relation("payoutTopayout_reversed_by_id", fields: [reversed_by_id], references: [id])
+  other_payout_payoutTopayout_original_payout_id                                 payout[]             @relation("payoutTopayout_original_payout_id")
+  other_payout_payoutTopayout_reversed_by_id                                     payout[]             @relation("payoutTopayout_reversed_by_id")
+}
+
+model person {
+  id                                    String    @id
+  deleted                               Boolean?
+  object                                String?
+  account_id                            String?
+  created                               DateTime? @db.Timestamp(6)
+  email                                 String?
+  first_name                            String?
+  first_name_kana                       String?
+  first_name_kanji                      String?
+  gender                                String?
+  id_number_provided                    Boolean?
+  last_name                             String?
+  last_name_kana                        String?
+  last_name_kanji                       String?
+  maiden_name                           String?
+  metadata                              Json?
+  nationality                           String?
+  phone                                 String?
+  political_exposure                    String?
+  ssn_last_4_provided                   Boolean?
+  address_city                          String?
+  address_country                       String?
+  address_line1                         String?
+  address_line2                         String?
+  address_postal_code                   String?
+  address_state                         String?
+  relationship_director                 Boolean?
+  relationship_executive                Boolean?
+  relationship_owner                    Boolean?
+  relationship_percent_ownership        Decimal?  @db.Decimal
+  relationship_representative           Boolean?
+  relationship_title                    String?
+  requirements_currently_due            String[]
+  requirements_errors                   Json?
+  requirements_eventually_due           String[]
+  requirements_past_due                 String[]
+  requirements_pending_verification     String[]
+  address_kanji_city                    String?
+  address_kanji_country                 String?
+  address_kanji_line1                   String?
+  address_kanji_line2                   String?
+  address_kanji_postal_code             String?
+  address_kanji_state                   String?
+  address_kanji_town                    String?
+  address_kana_city                     String?
+  address_kana_country                  String?
+  address_kana_line1                    String?
+  address_kana_line2                    String?
+  address_kana_postal_code              String?
+  address_kana_state                    String?
+  address_kana_town                     String?
+  dob_day                               BigInt?
+  dob_month                             BigInt?
+  dob_year                              BigInt?
+  verification_additional_document      Json?
+  verification_details                  String?
+  verification_details_code             String?
+  verification_document                 Json?
+  verification_status                   String?
+  account_accountToperson_account_id    account?  @relation("accountToperson_account_id", fields: [account_id], references: [id])
+  account_account_individual_idToperson account[] @relation("account_individual_idToperson")
+}
+
+model plan {
+  id                        String              @id
+  deleted                   Boolean?
+  object                    String?
+  active                    Boolean?
+  aggregate_usage           String?
+  amount                    BigInt?
+  amount_decimal            Decimal?            @db.Decimal
+  billing_scheme            String?
+  created                   DateTime?           @db.Timestamp(6)
+  currency                  String?
+  interval                  String?
+  interval_count            BigInt?
+  livemode                  Boolean?
+  metadata                  Json?
+  nickname                  String?
+  product_id                String?
+  tiers_mode                String?
+  trial_period_days         BigInt?
+  usage_type                String?
+  transform_usage_divide_by BigInt?
+  transform_usage_round     String?
+  tiers_flat_amount         BigInt?
+  tiers_flat_amount_decimal Decimal?            @db.Decimal
+  tiers_unit_amount         BigInt?
+  tiers_unit_amount_decimal Decimal?            @db.Decimal
+  tiers_up_to               BigInt?
+  product                   product?            @relation(fields: [product_id], references: [id])
+  invoice_item              invoice_item[]
+  line_item                 line_item[]
+  subscription_item         subscription_item[]
+}
+
+model platform_tax_fee {
+  id                    String              @id
+  account_id            String?
+  object                String?
+  source_transaction_id String?
+  type                  String?
+  account               account?            @relation(fields: [account_id], references: [id])
+  source_transaction    source_transaction? @relation(fields: [source_transaction_id], references: [id])
+}
+
+model price {
+  id                           String              @id
+  deleted                      Boolean?
+  object                       String?
+  active                       Boolean?
+  billing_scheme               String?
+  created                      DateTime?           @db.Timestamp(6)
+  currency                     String?
+  livemode                     Boolean?
+  lookup_key                   String?
+  metadata                     Json?
+  nickname                     String?
+  product_id                   String?
+  tiers_mode                   String?
+  type                         String?
+  unit_amount                  BigInt?
+  unit_amount_decimal          Decimal?            @db.Decimal
+  transform_quantity_divide_by BigInt?
+  transform_quantity_round     String?
+  recurring_aggregate_usage    String?
+  recurring_interval           String?
+  recurring_interval_count     BigInt?
+  recurring_trial_period_days  BigInt?
+  recurring_usage_type         String?
+  tiers_flat_amount            BigInt?
+  tiers_flat_amount_decimal    Decimal?            @db.Decimal
+  tiers_unit_amount            BigInt?
+  tiers_unit_amount_decimal    Decimal?            @db.Decimal
+  tiers_up_to                  BigInt?
+  product                      product?            @relation(fields: [product_id], references: [id])
+  invoice_item                 invoice_item[]
+  item                         item[]
+  line_item                    line_item[]
+  subscription_item            subscription_item[]
+}
+
+model product {
+  id                        String    @id
+  deleted                   Boolean?
+  object                    String?
+  active                    Boolean?
+  attributes                String[]
+  caption                   String?
+  created                   DateTime? @db.Timestamp(6)
+  deactivate_on             String[]
+  description               String?
+  images                    String[]
+  livemode                  Boolean?
+  metadata                  Json?
+  name                      String?
+  shippable                 Boolean?
+  statement_descriptor      String?
+  type                      String?
+  unit_label                String?
+  updated                   DateTime? @db.Timestamp(6)
+  url                       String?
+  package_dimensions_height Decimal?  @db.Decimal
+  package_dimensions_length Decimal?  @db.Decimal
+  package_dimensions_weight Decimal?  @db.Decimal
+  package_dimensions_width  Decimal?  @db.Decimal
+  plan                      plan[]
+  price                     price[]
+  sku                       sku[]
+}
+
+model promotion_code {
+  id                                   String     @id
+  active                               Boolean?
+  code                                 String?
+  coupon_id                            String?
+  created                              DateTime?  @db.Timestamp(6)
+  customer_id                          String?
+  expires_at                           DateTime?  @db.Timestamp(6)
+  livemode                             Boolean?
+  max_redemptions                      BigInt?
+  metadata                             Json?
+  object                               String?
+  times_redeemed                       BigInt?
+  restrictions_first_time_transaction  Boolean?
+  restrictions_minimum_amount          BigInt?
+  restrictions_minimum_amount_currency String?
+  coupon                               coupon?    @relation(fields: [coupon_id], references: [id])
+  customer                             customer?  @relation(fields: [customer_id], references: [id])
+  discount                             discount[]
+}
+
+model radar_early_fraud_warning {
+  id                String          @id
+  actionable        Boolean?
+  charge_id         String?
+  created           DateTime?       @db.Timestamp(6)
+  fraud_type        String?
+  livemode          Boolean?
+  object            String?
+  payment_intent_id String?
+  charge            charge?         @relation(fields: [charge_id], references: [id])
+  payment_intent    payment_intent? @relation(fields: [payment_intent_id], references: [id])
+}
+
+model radar_value_list {
+  id                    String                  @id
+  deleted               Boolean?
+  object                String?
+  alias                 String?
+  created               DateTime?               @db.Timestamp(6)
+  created_by            String?
+  item_type             String?
+  livemode              Boolean?
+  metadata              Json?
+  name                  String?
+  radar_value_list_item radar_value_list_item[]
+}
+
+model radar_value_list_item {
+  id               String            @id
+  deleted          Boolean?
+  object           String?
+  created          DateTime?         @db.Timestamp(6)
+  created_by       String?
+  livemode         Boolean?
+  value            String?
+  value_list       String?
+  radar_value_list radar_value_list? @relation(fields: [value_list], references: [id])
+}
+
+model recipient {
+  id                                             String        @id
+  deleted                                        Boolean?
+  object                                         String?
+  active_account_id                              String?
+  created                                        DateTime?     @db.Timestamp(6)
+  default_card_id                                String?
+  description                                    String?
+  email                                          String?
+  livemode                                       Boolean?
+  metadata                                       Json?
+  migrated_to_id                                 String?
+  name                                           String?
+  rolled_back_from_id                            String?
+  type                                           String?
+  verified                                       Boolean?
+  bank_account                                   bank_account? @relation(fields: [active_account_id], references: [id])
+  card_cardTorecipient_default_card_id           card?         @relation("cardTorecipient_default_card_id", fields: [default_card_id], references: [id])
+  account_accountTorecipient_migrated_to_id      account?      @relation("accountTorecipient_migrated_to_id", fields: [migrated_to_id], references: [id])
+  account_accountTorecipient_rolled_back_from_id account?      @relation("accountTorecipient_rolled_back_from_id", fields: [rolled_back_from_id], references: [id])
+  card_card_recipient_idTorecipient              card[]        @relation("card_recipient_idTorecipient")
+}
+
+model refund {
+  id                                                                             String               @id
+  amount                                                                         BigInt?
+  balance_transaction_id                                                         String?
+  charge_id                                                                      String?
+  created                                                                        DateTime?            @db.Timestamp(6)
+  currency                                                                       String?
+  description                                                                    String?
+  failure_balance_transaction_id                                                 String?
+  failure_reason                                                                 String?
+  metadata                                                                       Json?
+  object                                                                         String?
+  payment_intent_id                                                              String?
+  reason                                                                         String?
+  receipt_number                                                                 String?
+  source_transfer_reversal_id                                                    String?
+  status                                                                         String?
+  transfer_reversal_id                                                           String?
+  balance_transaction_balance_transactionTorefund_balance_transaction_id         balance_transaction? @relation("balance_transactionTorefund_balance_transaction_id", fields: [balance_transaction_id], references: [id])
+  charge                                                                         charge?              @relation(fields: [charge_id], references: [id])
+  balance_transaction_balance_transactionTorefund_failure_balance_transaction_id balance_transaction? @relation("balance_transactionTorefund_failure_balance_transaction_id", fields: [failure_balance_transaction_id], references: [id])
+  payment_intent                                                                 payment_intent?      @relation(fields: [payment_intent_id], references: [id])
+  transfer_reversal_refund_source_transfer_reversal_idTotransfer_reversal        transfer_reversal?   @relation("refund_source_transfer_reversal_idTotransfer_reversal", fields: [source_transfer_reversal_id], references: [id])
+  transfer_reversal_refund_transfer_reversal_idTotransfer_reversal               transfer_reversal?   @relation("refund_transfer_reversal_idTotransfer_reversal", fields: [transfer_reversal_id], references: [id])
+  credit_note                                                                    credit_note[]
+  order_return                                                                   order_return[]
+  transfer_reversal_refundTotransfer_reversal_destination_payment_refund_id      transfer_reversal[]  @relation("refundTotransfer_reversal_destination_payment_refund_id")
+  transfer_reversal_refundTotransfer_reversal_source_refund_id                   transfer_reversal[]  @relation("refundTotransfer_reversal_source_refund_id")
+}
+
+model reporting_report_run {
+  id                            String                 @id
+  created                       DateTime?              @db.Timestamp(6)
+  error                         String?
+  livemode                      Boolean?
+  object                        String?
+  report_type                   String?
+  result_id                     String?
+  status                        String?
+  succeeded_at                  DateTime?              @db.Timestamp(6)
+  parameters_columns            String[]
+  parameters_connected_account  String?
+  parameters_currency           String?
+  parameters_interval_end       DateTime?              @db.Timestamp(6)
+  parameters_interval_start     DateTime?              @db.Timestamp(6)
+  parameters_payout             String?
+  parameters_reporting_category String?
+  parameters_timezone           String?
+  reporting_report_type         reporting_report_type? @relation(fields: [report_type], references: [id])
+  file                          file?                  @relation(fields: [result_id], references: [id])
+}
+
+model reporting_report_type {
+  id                   String                 @id
+  data_available_end   DateTime?              @db.Timestamp(6)
+  data_available_start DateTime?              @db.Timestamp(6)
+  default_columns      String[]
+  name                 String?
+  object               String?
+  updated              DateTime?              @db.Timestamp(6)
+  version              BigInt?
+  reporting_report_run reporting_report_run[]
+}
+
+model reserve_transaction {
+  id          String  @id
+  amount      BigInt?
+  currency    String?
+  description String?
+  object      String?
+}
+
+model review {
+  id                                                      String           @id
+  billing_zip                                             String?
+  charge_id                                               String?
+  closed_reason                                           String?
+  created                                                 DateTime?        @db.Timestamp(6)
+  ip_address                                              String?
+  livemode                                                Boolean?
+  object                                                  String?
+  open                                                    Boolean?
+  opened_reason                                           String?
+  payment_intent_id                                       String?
+  reason                                                  String?
+  ip_address_location_city                                String?
+  ip_address_location_country                             String?
+  ip_address_location_latitude                            Decimal?         @db.Decimal
+  ip_address_location_longitude                           Decimal?         @db.Decimal
+  ip_address_location_region                              String?
+  session_browser                                         String?
+  session_device                                          String?
+  session_platform                                        String?
+  session_version                                         String?
+  charge_chargeToreview_charge_id                         charge?          @relation("chargeToreview_charge_id", fields: [charge_id], references: [id])
+  payment_intent_payment_intentToreview_payment_intent_id payment_intent?  @relation("payment_intentToreview_payment_intent_id", fields: [payment_intent_id], references: [id])
+  charge_charge_review_idToreview                         charge[]         @relation("charge_review_idToreview")
+  payment_intent_payment_intent_review_idToreview         payment_intent[] @relation("payment_intent_review_idToreview")
+}
+
+model scheduled_query_run {
+  id                     String    @id
+  created                DateTime? @db.Timestamp(6)
+  data_load_time         DateTime? @db.Timestamp(6)
+  file_id                String?
+  livemode               Boolean?
+  object                 String?
+  result_available_until DateTime? @db.Timestamp(6)
+  sql                    String?
+  status                 String?
+  title                  String?
+  error_message          String?
+  file                   file?     @relation(fields: [file_id], references: [id])
+}
+
+model setup_attempt {
+  id                                                                         String          @id
+  application_id                                                             String?
+  created                                                                    DateTime?       @db.Timestamp(6)
+  customer_id                                                                String?
+  livemode                                                                   Boolean?
+  object                                                                     String?
+  on_behalf_of_id                                                            String?
+  payment_method_id                                                          String?
+  setup_intent_id                                                            String?
+  status                                                                     String?
+  usage                                                                      String?
+  setup_error_charge                                                         String?
+  setup_error_code                                                           String?
+  setup_error_decline_code                                                   String?
+  setup_error_doc_url                                                        String?
+  setup_error_message                                                        String?
+  setup_error_param                                                          String?
+  setup_error_payment_intent_id                                              String?
+  setup_error_payment_method_id                                              String?
+  setup_error_payment_method_type                                            String?
+  setup_error_setup_intent_id                                                String?
+  setup_error_source                                                         Json?
+  setup_error_type                                                           String?
+  payment_method_details_acss_debit                                          Json?
+  payment_method_details_au_becs_debit                                       Json?
+  payment_method_details_bacs_debit                                          Json?
+  payment_method_details_bancontact                                          Json?
+  payment_method_details_card                                                Json?
+  payment_method_details_card_present                                        Json?
+  payment_method_details_ideal                                               Json?
+  payment_method_details_sepa_debit                                          Json?
+  payment_method_details_sofort                                              Json?
+  payment_method_details_type                                                String?
+  application                                                                application?    @relation(fields: [application_id], references: [id])
+  customer                                                                   customer?       @relation(fields: [customer_id], references: [id])
+  account                                                                    account?        @relation(fields: [on_behalf_of_id], references: [id])
+  payment_method_payment_methodTosetup_attempt_payment_method_id             payment_method? @relation("payment_methodTosetup_attempt_payment_method_id", fields: [payment_method_id], references: [id])
+  payment_intent                                                             payment_intent? @relation(fields: [setup_error_payment_intent_id], references: [id])
+  payment_method_payment_methodTosetup_attempt_setup_error_payment_method_id payment_method? @relation("payment_methodTosetup_attempt_setup_error_payment_method_id", fields: [setup_error_payment_method_id], references: [id])
+  setup_intent_setup_attempt_setup_error_setup_intent_idTosetup_intent       setup_intent?   @relation("setup_attempt_setup_error_setup_intent_idTosetup_intent", fields: [setup_error_setup_intent_id], references: [id])
+  setup_intent_setup_attempt_setup_intent_idTosetup_intent                   setup_intent?   @relation("setup_attempt_setup_intent_idTosetup_intent", fields: [setup_intent_id], references: [id])
+  setup_intent_setup_attemptTosetup_intent_latest_attempt_id                 setup_intent[]  @relation("setup_attemptTosetup_intent_latest_attempt_id")
+}
+
+model setup_intent {
+  id                                                                             String             @id
+  application_id                                                                 String?
+  cancellation_reason                                                            String?
+  client_secret                                                                  String?
+  created                                                                        DateTime?          @db.Timestamp(6)
+  customer_id                                                                    String?
+  description                                                                    String?
+  latest_attempt_id                                                              String?
+  livemode                                                                       Boolean?
+  mandate_id                                                                     String?
+  metadata                                                                       Json?
+  object                                                                         String?
+  on_behalf_of_id                                                                String?
+  payment_method_id                                                              String?
+  payment_method_types                                                           String[]
+  single_use_mandate_id                                                          String?
+  status                                                                         String?
+  usage                                                                          String?
+  next_action_redirect_to_url                                                    Json?
+  next_action_type                                                               String?
+  next_action_use_stripe_sdk                                                     Json?
+  next_action_verify_with_microdeposits                                          Json?
+  payment_method_options_acss_debit                                              Json?
+  payment_method_options_card                                                    Json?
+  payment_method_options_sepa_debit                                              Json?
+  last_setup_error_charge                                                        String?
+  last_setup_error_code                                                          String?
+  last_setup_error_decline_code                                                  String?
+  last_setup_error_doc_url                                                       String?
+  last_setup_error_message                                                       String?
+  last_setup_error_param                                                         String?
+  last_setup_error_payment_intent_id                                             String?
+  last_setup_error_payment_method_id                                             String?
+  last_setup_error_payment_method_type                                           String?
+  last_setup_error_setup_intent_id                                               String?
+  last_setup_error_source                                                        Json?
+  last_setup_error_type                                                          String?
+  application                                                                    application?       @relation(fields: [application_id], references: [id])
+  customer                                                                       customer?          @relation(fields: [customer_id], references: [id])
+  payment_intent_payment_intentTosetup_intent_last_setup_error_payment_intent_id payment_intent?    @relation("payment_intentTosetup_intent_last_setup_error_payment_intent_id", fields: [last_setup_error_payment_intent_id], references: [id])
+  payment_method_payment_methodTosetup_intent_last_setup_error_payment_method_id payment_method?    @relation("payment_methodTosetup_intent_last_setup_error_payment_method_id", fields: [last_setup_error_payment_method_id], references: [id])
+  setup_intent                                                                   setup_intent?      @relation("setup_intentTosetup_intent_last_setup_error_setup_intent_id", fields: [last_setup_error_setup_intent_id], references: [id])
+  setup_attempt_setup_attemptTosetup_intent_latest_attempt_id                    setup_attempt?     @relation("setup_attemptTosetup_intent_latest_attempt_id", fields: [latest_attempt_id], references: [id])
+  mandate_mandateTosetup_intent_mandate_id                                       mandate?           @relation("mandateTosetup_intent_mandate_id", fields: [mandate_id], references: [id])
+  account                                                                        account?           @relation(fields: [on_behalf_of_id], references: [id])
+  payment_method_payment_methodTosetup_intent_payment_method_id                  payment_method?    @relation("payment_methodTosetup_intent_payment_method_id", fields: [payment_method_id], references: [id])
+  mandate_mandateTosetup_intent_single_use_mandate_id                            mandate?           @relation("mandateTosetup_intent_single_use_mandate_id", fields: [single_use_mandate_id], references: [id])
+  checkout_session                                                               checkout_session[]
+  invoice                                                                        invoice[]
+  payment_intent_payment_intent_last_payment_error_setup_intent_idTosetup_intent payment_intent[]   @relation("payment_intent_last_payment_error_setup_intent_idTosetup_intent")
+  setup_attempt_setup_attempt_setup_error_setup_intent_idTosetup_intent          setup_attempt[]    @relation("setup_attempt_setup_error_setup_intent_idTosetup_intent")
+  setup_attempt_setup_attempt_setup_intent_idTosetup_intent                      setup_attempt[]    @relation("setup_attempt_setup_intent_idTosetup_intent")
+  other_setup_intent                                                             setup_intent[]     @relation("setup_intentTosetup_intent_last_setup_error_setup_intent_id")
+  subscription                                                                   subscription[]
+}
+
+model sku {
+  id                        String         @id
+  deleted                   Boolean?
+  object                    String?
+  active                    Boolean?
+  attributes                Json?
+  created                   DateTime?      @db.Timestamp(6)
+  currency                  String?
+  image                     String?
+  livemode                  Boolean?
+  metadata                  Json?
+  price                     BigInt?
+  product_id                String?
+  updated                   DateTime?      @db.Timestamp(6)
+  inventory_quantity        BigInt?
+  inventory_type            String?
+  inventory_value           String?
+  package_dimensions_height Decimal?       @db.Decimal
+  package_dimensions_length Decimal?       @db.Decimal
+  package_dimensions_weight Decimal?       @db.Decimal
+  package_dimensions_width  Decimal?       @db.Decimal
+  product                   product?       @relation(fields: [product_id], references: [id])
+  order                     order[]
+  order_item                order_item[]
+  order_return              order_return[]
+}
+
+model source {
+  id                                                             String                        @id
+  amount                                                         BigInt?
+  client_secret                                                  String?
+  created                                                        DateTime?                     @db.Timestamp(6)
+  currency                                                       String?
+  customer_id                                                    String?
+  flow                                                           String?
+  livemode                                                       Boolean?
+  metadata                                                       Json?
+  object                                                         String?
+  statement_descriptor                                           String?
+  status                                                         String?
+  type                                                           String?
+  usage                                                          String?
+  redirect_failure_reason                                        String?
+  redirect_return_url                                            String?
+  redirect_status                                                String?
+  redirect_url                                                   String?
+  sofort_bank_code                                               String?
+  sofort_bank_name                                               String?
+  sofort_bic                                                     String?
+  sofort_country                                                 String?
+  sofort_iban_last4                                              String?
+  sofort_preferred_language                                      String?
+  sofort_statement_descriptor                                    String?
+  receiver_address                                               String?
+  receiver_amount_charged                                        BigInt?
+  receiver_amount_received                                       BigInt?
+  receiver_amount_returned                                       BigInt?
+  receiver_refund_attributes_method                              String?
+  receiver_refund_attributes_status                              String?
+  ach_credit_transfer_account_number                             String?
+  ach_credit_transfer_bank_name                                  String?
+  ach_credit_transfer_fingerprint                                String?
+  ach_credit_transfer_refund_account_holder_name                 String?
+  ach_credit_transfer_refund_account_holder_type                 String?
+  ach_credit_transfer_refund_routing_number                      String?
+  ach_credit_transfer_routing_number                             String?
+  ach_credit_transfer_swift_code                                 String?
+  au_becs_debit_bsb_number                                       String?
+  au_becs_debit_fingerprint                                      String?
+  au_becs_debit_last4                                            String?
+  sepa_debit_bank_code                                           String?
+  sepa_debit_branch_code                                         String?
+  sepa_debit_country                                             String?
+  sepa_debit_fingerprint                                         String?
+  sepa_debit_last4                                               String?
+  sepa_debit_mandate_reference                                   String?
+  sepa_debit_mandate_url                                         String?
+  owner_address                                                  Json?
+  owner_email                                                    String?
+  owner_name                                                     String?
+  owner_phone                                                    String?
+  owner_verified_address                                         Json?
+  owner_verified_email                                           String?
+  owner_verified_name                                            String?
+  owner_verified_phone                                           String?
+  p24_reference                                                  String?
+  multibanco_entity                                              String?
+  multibanco_reference                                           String?
+  multibanco_refund_account_holder_address_city                  String?
+  multibanco_refund_account_holder_address_country               String?
+  multibanco_refund_account_holder_address_line1                 String?
+  multibanco_refund_account_holder_address_line2                 String?
+  multibanco_refund_account_holder_address_postal_code           String?
+  multibanco_refund_account_holder_address_state                 String?
+  multibanco_refund_account_holder_name                          String?
+  multibanco_refund_iban                                         String?
+  source_order_amount                                            BigInt?
+  source_order_currency                                          String?
+  source_order_email                                             String?
+  source_order_items                                             Json?
+  source_order_shipping                                          Json?
+  card_present_application_cryptogram                            String?
+  card_present_application_preferred_name                        String?
+  card_present_authorization_code                                String?
+  card_present_authorization_response_code                       String?
+  card_present_brand                                             String?
+  card_present_country                                           String?
+  card_present_cvm_type                                          String?
+  card_present_data_type                                         String?
+  card_present_dedicated_file_name                               String?
+  card_present_description                                       String?
+  card_present_emv_auth_data                                     String?
+  card_present_evidence_customer_signature                       String?
+  card_present_evidence_transaction_certificate                  String?
+  card_present_exp_month                                         BigInt?
+  card_present_exp_year                                          BigInt?
+  card_present_fingerprint                                       String?
+  card_present_funding                                           String?
+  card_present_iin                                               String?
+  card_present_issuer                                            String?
+  card_present_last4                                             String?
+  card_present_pos_device_id                                     String?
+  card_present_pos_entry_mode                                    String?
+  card_present_read_method                                       String?
+  card_present_reader                                            String?
+  card_present_terminal_verification_results                     String?
+  card_present_transaction_status_information                    String?
+  sepa_credit_transfer_bank_name                                 String?
+  sepa_credit_transfer_bic                                       String?
+  sepa_credit_transfer_iban                                      String?
+  sepa_credit_transfer_refund_account_holder_address_city        String?
+  sepa_credit_transfer_refund_account_holder_address_country     String?
+  sepa_credit_transfer_refund_account_holder_address_line1       String?
+  sepa_credit_transfer_refund_account_holder_address_line2       String?
+  sepa_credit_transfer_refund_account_holder_address_postal_code String?
+  sepa_credit_transfer_refund_account_holder_address_state       String?
+  sepa_credit_transfer_refund_account_holder_name                String?
+  sepa_credit_transfer_refund_iban                               String?
+  card_address_line1_check                                       String?
+  card_address_zip_check                                         String?
+  card_brand                                                     String?
+  card_country                                                   String?
+  card_cvc_check                                                 String?
+  card_description                                               String?
+  card_dynamic_last4                                             String?
+  card_exp_month                                                 BigInt?
+  card_exp_year                                                  BigInt?
+  card_fingerprint                                               String?
+  card_funding                                                   String?
+  card_iin                                                       String?
+  card_issuer                                                    String?
+  card_last4                                                     String?
+  card_name                                                      String?
+  card_three_d_secure                                            String?
+  card_tokenization_method                                       String?
+  klarna_background_image_url                                    String?
+  klarna_client_token                                            String?
+  klarna_first_name                                              String?
+  klarna_last_name                                               String?
+  klarna_locale                                                  String?
+  klarna_logo_url                                                String?
+  klarna_page_title                                              String?
+  klarna_pay_later_asset_urls_descriptive                        String?
+  klarna_pay_later_asset_urls_standard                           String?
+  klarna_pay_later_name                                          String?
+  klarna_pay_later_redirect_url                                  String?
+  klarna_pay_now_asset_urls_descriptive                          String?
+  klarna_pay_now_asset_urls_standard                             String?
+  klarna_pay_now_name                                            String?
+  klarna_pay_now_redirect_url                                    String?
+  klarna_pay_over_time_asset_urls_descriptive                    String?
+  klarna_pay_over_time_asset_urls_standard                       String?
+  klarna_pay_over_time_name                                      String?
+  klarna_pay_over_time_redirect_url                              String?
+  klarna_payment_method_categories                               String?
+  klarna_purchase_country                                        String?
+  klarna_purchase_type                                           String?
+  klarna_redirect_url                                            String?
+  klarna_shipping_delay                                          BigInt?
+  klarna_shipping_first_name                                     String?
+  klarna_shipping_last_name                                      String?
+  ach_debit_bank_name                                            String?
+  ach_debit_country                                              String?
+  ach_debit_fingerprint                                          String?
+  ach_debit_last4                                                String?
+  ach_debit_routing_number                                       String?
+  ach_debit_type                                                 String?
+  giropay_bank_code                                              String?
+  giropay_bank_name                                              String?
+  giropay_bic                                                    String?
+  giropay_statement_descriptor                                   String?
+  acss_debit_bank_address_city                                   String?
+  acss_debit_bank_address_line_1                                 String?
+  acss_debit_bank_address_line_2                                 String?
+  acss_debit_bank_address_postal_code                            String?
+  acss_debit_bank_name                                           String?
+  acss_debit_category                                            String?
+  acss_debit_country                                             String?
+  acss_debit_fingerprint                                         String?
+  acss_debit_last4                                               String?
+  acss_debit_routing_number                                      String?
+  code_verification_attempts_remaining                           BigInt?
+  code_verification_status                                       String?
+  ideal_bank                                                     String?
+  ideal_bic                                                      String?
+  ideal_iban_last4                                               String?
+  ideal_statement_descriptor                                     String?
+  alipay_data_string                                             String?
+  alipay_native_url                                              String?
+  alipay_statement_descriptor                                    String?
+  eps_reference                                                  String?
+  eps_statement_descriptor                                       String?
+  wechat_prepay_id                                               String?
+  wechat_qr_code_url                                             String?
+  wechat_statement_descriptor                                    String?
+  three_d_secure_address_line1_check                             String?
+  three_d_secure_address_zip_check                               String?
+  three_d_secure_authenticated                                   Boolean?
+  three_d_secure_brand                                           String?
+  three_d_secure_card                                            String?
+  three_d_secure_country                                         String?
+  three_d_secure_customer                                        String?
+  three_d_secure_cvc_check                                       String?
+  three_d_secure_description                                     String?
+  three_d_secure_dynamic_last4                                   String?
+  three_d_secure_exp_month                                       BigInt?
+  three_d_secure_exp_year                                        BigInt?
+  three_d_secure_fingerprint                                     String?
+  three_d_secure_funding                                         String?
+  three_d_secure_iin                                             String?
+  three_d_secure_issuer                                          String?
+  three_d_secure_last4                                           String?
+  three_d_secure_name                                            String?
+  three_d_secure_three_d_secure                                  String?
+  three_d_secure_tokenization_method                             String?
+  bancontact_bank_code                                           String?
+  bancontact_bank_name                                           String?
+  bancontact_bic                                                 String?
+  bancontact_iban_last4                                          String?
+  bancontact_preferred_language                                  String?
+  bancontact_statement_descriptor                                String?
+  customer                                                       customer?                     @relation(fields: [customer_id], references: [id])
+  source_mandate_notification                                    source_mandate_notification[]
+  source_transaction                                             source_transaction[]
+  topup                                                          topup[]
+}
+
+model source_mandate_notification {
+  id                              String    @id
+  amount                          BigInt?
+  created                         DateTime? @db.Timestamp(6)
+  livemode                        Boolean?
+  object                          String?
+  reason                          String?
+  source_id                       String?
+  status                          String?
+  type                            String?
+  sepa_debit_creditor_identifier  String?
+  sepa_debit_last4                String?
+  sepa_debit_mandate_reference    String?
+  bacs_debit_last4                String?
+  acss_debit_statement_descriptor String?
+  source                          source?   @relation(fields: [source_id], references: [id])
+}
+
+model source_transaction {
+  id                                         String             @id
+  amount                                     BigInt?
+  created                                    DateTime?          @db.Timestamp(6)
+  currency                                   String?
+  livemode                                   Boolean?
+  object                                     String?
+  source_id                                  String?
+  status                                     String?
+  type                                       String?
+  gbp_credit_transfer_fingerprint            String?
+  gbp_credit_transfer_funding_method         String?
+  gbp_credit_transfer_last4                  String?
+  gbp_credit_transfer_reference              String?
+  gbp_credit_transfer_sender_account_number  String?
+  gbp_credit_transfer_sender_name            String?
+  gbp_credit_transfer_sender_sort_code       String?
+  sepa_credit_transfer_reference             String?
+  sepa_credit_transfer_sender_iban           String?
+  sepa_credit_transfer_sender_name           String?
+  paper_check_available_at                   String?
+  paper_check_invoices                       String?
+  ach_credit_transfer_customer_data          String?
+  ach_credit_transfer_fingerprint            String?
+  ach_credit_transfer_last4                  String?
+  ach_credit_transfer_routing_number         String?
+  chf_credit_transfer_reference              String?
+  chf_credit_transfer_sender_address_country String?
+  chf_credit_transfer_sender_address_line1   String?
+  chf_credit_transfer_sender_iban            String?
+  chf_credit_transfer_sender_name            String?
+  source                                     source?            @relation(fields: [source_id], references: [id])
+  platform_tax_fee                           platform_tax_fee[]
+}
+
+model subscription {
+  id                                                                        String                  @id
+  application_fee_percent                                                   Decimal?                @db.Decimal
+  billing_cycle_anchor                                                      DateTime?               @db.Timestamp(6)
+  cancel_at                                                                 DateTime?               @db.Timestamp(6)
+  cancel_at_period_end                                                      Boolean?
+  canceled_at                                                               DateTime?               @db.Timestamp(6)
+  collection_method                                                         String?
+  created                                                                   DateTime?               @db.Timestamp(6)
+  current_period_end                                                        DateTime?               @db.Timestamp(6)
+  current_period_start                                                      DateTime?               @db.Timestamp(6)
+  customer_id                                                               String?
+  days_until_due                                                            BigInt?
+  default_payment_method_id                                                 String?
+  discount_id                                                               String?
+  ended_at                                                                  DateTime?               @db.Timestamp(6)
+  latest_invoice_id                                                         String?
+  livemode                                                                  Boolean?
+  metadata                                                                  Json?
+  next_pending_invoice_item_invoice                                         DateTime?               @db.Timestamp(6)
+  object                                                                    String?
+  pending_setup_intent_id                                                   String?
+  schedule_id                                                               String?
+  start_date                                                                DateTime?               @db.Timestamp(6)
+  status                                                                    String?
+  trial_end                                                                 DateTime?               @db.Timestamp(6)
+  trial_start                                                               DateTime?               @db.Timestamp(6)
+  pause_collection_behavior                                                 String?
+  pause_collection_resumes_at                                               DateTime?               @db.Timestamp(6)
+  pending_update_billing_cycle_anchor                                       DateTime?               @db.Timestamp(6)
+  pending_update_expires_at                                                 DateTime?               @db.Timestamp(6)
+  pending_update_subscription_items                                         Json?
+  pending_update_trial_end                                                  DateTime?               @db.Timestamp(6)
+  pending_update_trial_from_plan                                            Boolean?
+  pending_invoice_item_interval_interval                                    String?
+  pending_invoice_item_interval_interval_count                              BigInt?
+  transfer_data_amount_percent                                              Decimal?                @db.Decimal
+  transfer_data_destination_id                                              String?
+  billing_thresholds_amount_gte                                             BigInt?
+  billing_thresholds_reset_billing_cycle_anchor                             Boolean?
+  customer                                                                  customer?               @relation(fields: [customer_id], references: [id])
+  payment_method                                                            payment_method?         @relation(fields: [default_payment_method_id], references: [id])
+  discount_discountTosubscription_discount_id                               discount?               @relation("discountTosubscription_discount_id", fields: [discount_id], references: [id])
+  invoice_invoiceTosubscription_latest_invoice_id                           invoice?                @relation("invoiceTosubscription_latest_invoice_id", fields: [latest_invoice_id], references: [id])
+  setup_intent                                                              setup_intent?           @relation(fields: [pending_setup_intent_id], references: [id])
+  subscription_schedule_subscription_schedule_idTosubscription_schedule     subscription_schedule?  @relation("subscription_schedule_idTosubscription_schedule", fields: [schedule_id], references: [id])
+  account                                                                   account?                @relation(fields: [transfer_data_destination_id], references: [id])
+  checkout_session                                                          checkout_session[]
+  discount_discount_subscription_idTosubscription                           discount[]              @relation("discount_subscription_idTosubscription")
+  invoice_invoice_subscription_idTosubscription                             invoice[]               @relation("invoice_subscription_idTosubscription")
+  invoice_item                                                              invoice_item[]
+  line_item                                                                 line_item[]
+  subscription_item                                                         subscription_item[]
+  subscription_schedule_subscriptionTosubscription_schedule_subscription_id subscription_schedule[] @relation("subscriptionTosubscription_schedule_subscription_id")
+}
+
+model subscription_item {
+  id                           String                 @id
+  deleted                      Boolean?
+  object                       String?
+  created                      DateTime?              @db.Timestamp(6)
+  metadata                     Json?
+  plan_id                      String?
+  price_id                     String?
+  quantity                     BigInt?
+  subscription_id              String?
+  billing_thresholds_usage_gte BigInt?
+  plan                         plan?                  @relation(fields: [plan_id], references: [id])
+  price                        price?                 @relation(fields: [price_id], references: [id])
+  subscription                 subscription?          @relation(fields: [subscription_id], references: [id])
+  invoice_item                 invoice_item[]
+  line_item                    line_item[]
+  usage_record                 usage_record[]
+  usage_record_summary         usage_record_summary[]
+}
+
+model subscription_schedule {
+  id                                                                                              String          @id
+  canceled_at                                                                                     DateTime?       @db.Timestamp(6)
+  completed_at                                                                                    DateTime?       @db.Timestamp(6)
+  created                                                                                         DateTime?       @db.Timestamp(6)
+  customer_id                                                                                     String?
+  end_behavior                                                                                    String?
+  livemode                                                                                        Boolean?
+  metadata                                                                                        Json?
+  object                                                                                          String?
+  released_at                                                                                     DateTime?       @db.Timestamp(6)
+  released_subscription                                                                           String?
+  status                                                                                          String?
+  subscription_id                                                                                 String?
+  current_phase_end_date                                                                          DateTime?       @db.Timestamp(6)
+  current_phase_start_date                                                                        DateTime?       @db.Timestamp(6)
+  phases_add_invoice_items                                                                        Json?
+  phases_application_fee_percent                                                                  Decimal?        @db.Decimal
+  phases_billing_cycle_anchor                                                                     String?
+  phases_billing_thresholds                                                                       Json?
+  phases_collection_method                                                                        String?
+  phases_coupon_id                                                                                String?
+  phases_default_payment_method_id                                                                String?
+  phases_default_tax_rates                                                                        Json?
+  phases_end_date                                                                                 DateTime?       @db.Timestamp(6)
+  phases_invoice_settings                                                                         Json?
+  phases_items                                                                                    Json?
+  phases_proration_behavior                                                                       String?
+  phases_start_date                                                                               DateTime?       @db.Timestamp(6)
+  phases_transfer_data                                                                            Json?
+  phases_trial_end                                                                                DateTime?       @db.Timestamp(6)
+  default_settings_application_fee_percent                                                        Decimal?        @db.Decimal
+  default_settings_billing_cycle_anchor                                                           String?
+  default_settings_billing_thresholds                                                             Json?
+  default_settings_collection_method                                                              String?
+  default_settings_default_payment_method_id                                                      String?
+  default_settings_invoice_settings                                                               Json?
+  default_settings_transfer_data                                                                  Json?
+  customer                                                                                        customer?       @relation(fields: [customer_id], references: [id])
+  payment_method_payment_methodTosubscription_schedule_default_settings_default_payment_method_id payment_method? @relation("payment_methodTosubscription_schedule_default_settings_default_payment_method_id", fields: [default_settings_default_payment_method_id], references: [id])
+  coupon                                                                                          coupon?         @relation(fields: [phases_coupon_id], references: [id])
+  payment_method_payment_methodTosubscription_schedule_phases_default_payment_method_id           payment_method? @relation("payment_methodTosubscription_schedule_phases_default_payment_method_id", fields: [phases_default_payment_method_id], references: [id])
+  subscription_subscriptionTosubscription_schedule_subscription_id                                subscription?   @relation("subscriptionTosubscription_schedule_subscription_id", fields: [subscription_id], references: [id])
+  subscription_subscription_schedule_idTosubscription_schedule                                    subscription[]  @relation("subscription_schedule_idTosubscription_schedule")
+}
+
+model tax_deducted_at_source {
+  id                           String    @id
+  object                       String?
+  period_end                   DateTime? @db.Timestamp(6)
+  period_start                 DateTime? @db.Timestamp(6)
+  tax_deduction_account_number String?
+}
+
+model tax_id {
+  id                            String    @id
+  deleted                       Boolean?
+  object                        String?
+  country                       String?
+  created                       DateTime? @db.Timestamp(6)
+  customer_id                   String?
+  livemode                      Boolean?
+  type                          String?
+  value                         String?
+  verification_status           String?
+  verification_verified_address String?
+  verification_verified_name    String?
+  customer                      customer? @relation(fields: [customer_id], references: [id])
+}
+
+model tax_rate {
+  id                    String                  @id
+  active                Boolean?
+  country               String?
+  created               DateTime?               @db.Timestamp(6)
+  description           String?
+  display_name          String?
+  inclusive             Boolean?
+  jurisdiction          String?
+  livemode              Boolean?
+  metadata              Json?
+  object                String?
+  percentage            Decimal?                @db.Decimal
+  state                 String?
+  credit_note           credit_note[]
+  credit_note_line_item credit_note_line_item[]
+  invoice               invoice[]
+  item                  item[]
+  line_item             line_item[]
+}
+
+model terminal_location {
+  id                  String            @id
+  deleted             Boolean?
+  object              String?
+  display_name        String?
+  livemode            Boolean?
+  metadata            Json?
+  address_city        String?
+  address_country     String?
+  address_line1       String?
+  address_line2       String?
+  address_postal_code String?
+  address_state       String?
+  terminal_reader     terminal_reader[]
+}
+
+model terminal_reader {
+  id                String             @id
+  deleted           Boolean?
+  object            String?
+  device_sw_version String?
+  device_type       String?
+  ip_address        String?
+  label             String?
+  livemode          Boolean?
+  location          String?
+  metadata          Json?
+  serial_number     String?
+  status            String?
+  terminal_location terminal_location? @relation(fields: [location], references: [id])
+}
+
+model three_d_secure {
+  id            String    @id
+  amount        BigInt?
+  authenticated Boolean?
+  card_id       String?
+  created       DateTime? @db.Timestamp(6)
+  currency      String?
+  livemode      Boolean?
+  object        String?
+  redirect_url  String?
+  status        String?
+  card          card?     @relation(fields: [card_id], references: [id])
+}
+
+model token {
+  id              String        @id
+  bank_account_id String?
+  card_id         String?
+  client_ip       String?
+  created         DateTime?     @db.Timestamp(6)
+  livemode        Boolean?
+  object          String?
+  type            String?
+  used            Boolean?
+  bank_account    bank_account? @relation(fields: [bank_account_id], references: [id])
+  card            card?         @relation(fields: [card_id], references: [id])
+}
+
+model topup {
+  id                         String               @id
+  amount                     BigInt?
+  balance_transaction_id     String?
+  created                    DateTime?            @db.Timestamp(6)
+  currency                   String?
+  description                String?
+  expected_availability_date BigInt?
+  failure_code               String?
+  failure_message            String?
+  livemode                   Boolean?
+  metadata                   Json?
+  object                     String?
+  source_id                  String?
+  statement_descriptor       String?
+  status                     String?
+  transfer_group             String?
+  balance_transaction        balance_transaction? @relation(fields: [balance_transaction_id], references: [id])
+  source                     source?              @relation(fields: [source_id], references: [id])
+}
+
+model transfer {
+  id                                             String               @id
+  amount                                         BigInt?
+  amount_reversed                                BigInt?
+  balance_transaction_id                         String?
+  created                                        DateTime?            @db.Timestamp(6)
+  currency                                       String?
+  description                                    String?
+  destination_id                                 String?
+  destination_payment_id                         String?
+  livemode                                       Boolean?
+  metadata                                       Json?
+  object                                         String?
+  reversed                                       Boolean?
+  source_transaction_id                          String?
+  source_type                                    String?
+  transfer_group                                 String?
+  balance_transaction                            balance_transaction? @relation(fields: [balance_transaction_id], references: [id])
+  account                                        account?             @relation(fields: [destination_id], references: [id])
+  charge_chargeTotransfer_destination_payment_id charge?              @relation("chargeTotransfer_destination_payment_id", fields: [destination_payment_id], references: [id])
+  charge_chargeTotransfer_source_transaction_id  charge?              @relation("chargeTotransfer_source_transaction_id", fields: [source_transaction_id], references: [id])
+  charge_charge_source_transfer_idTotransfer     charge[]             @relation("charge_source_transfer_idTotransfer")
+  charge_charge_transfer_idTotransfer            charge[]             @relation("charge_transfer_idTotransfer")
+  transfer_reversal                              transfer_reversal[]
+}
+
+model transfer_reversal {
+  id                                                             String               @id
+  amount                                                         BigInt?
+  balance_transaction_id                                         String?
+  created                                                        DateTime?            @db.Timestamp(6)
+  currency                                                       String?
+  destination_payment_refund_id                                  String?
+  metadata                                                       Json?
+  object                                                         String?
+  source_refund_id                                               String?
+  transfer_id                                                    String?
+  balance_transaction                                            balance_transaction? @relation(fields: [balance_transaction_id], references: [id])
+  refund_refundTotransfer_reversal_destination_payment_refund_id refund?              @relation("refundTotransfer_reversal_destination_payment_refund_id", fields: [destination_payment_refund_id], references: [id])
+  refund_refundTotransfer_reversal_source_refund_id              refund?              @relation("refundTotransfer_reversal_source_refund_id", fields: [source_refund_id], references: [id])
+  transfer                                                       transfer?            @relation(fields: [transfer_id], references: [id])
+  refund_refund_source_transfer_reversal_idTotransfer_reversal   refund[]             @relation("refund_source_transfer_reversal_idTotransfer_reversal")
+  refund_refund_transfer_reversal_idTotransfer_reversal          refund[]             @relation("refund_transfer_reversal_idTotransfer_reversal")
+}
+
+model usage_record {
+  id                   String             @id
+  livemode             Boolean?
+  object               String?
+  quantity             BigInt?
+  subscription_item_id String?
+  timestamp            DateTime?          @db.Timestamp(6)
+  subscription_item    subscription_item? @relation(fields: [subscription_item_id], references: [id])
+}
+
+model usage_record_summary {
+  id                   String             @id
+  invoice_id           String?
+  livemode             Boolean?
+  object               String?
+  subscription_item_id String?
+  total_usage          BigInt?
+  period_end           DateTime?          @db.Timestamp(6)
+  period_start         DateTime?          @db.Timestamp(6)
+  invoice              invoice?           @relation(fields: [invoice_id], references: [id])
+  subscription_item    subscription_item? @relation(fields: [subscription_item_id], references: [id])
+}
+
+model webhook_endpoint {
+  id             String       @id
+  deleted        Boolean?
+  object         String?
+  api_version    String?
+  application_id String?
+  created        DateTime?    @db.Timestamp(6)
+  description    String?
+  enabled_events String[]
+  livemode       Boolean?
+  metadata       Json?
+  secret         String?
+  status         String?
+  url            String?
+  application    application? @relation(fields: [application_id], references: [id])
+}

@@ -1,42 +1,52 @@
-import { Client } from "pg";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { PrismaClient } from "@prisma/client";
 
-const client = new Client({ connectionString: process.env.PGCONN });
-client.connect();
+const prisma = new PrismaClient();
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   let { id } = req.query;
-  if (!id) {
+  if (!id || typeof id !== "string") {
     res
       .status(400)
       .send({ ok: false, error: "Request must contain a `customerId`" });
   } else {
     try {
-      let customer = await getOne(`select * from customer where id = $1`, [id]);
-      let subscription = await getOne(
-        `select * from subscription where customer_id = $1`,
-        [id]
-      );
-      let lastInvoice = await getOne(
-        `select * from invoice where subscription_id = $1 order by created desc limit 1`,
-        [subscription.id]
-      );
-      let paymentMethod = await getOne(
-        `select * from payment_method where id = $1`,
-        [customer.invoice_settings_default_payment_method_id]
-      );
-      let charges = await listAll(
-        `select charge.*, payment_method.card_last4, payment_method.card_brand
-        from charge
-        inner join payment_method on payment_method.id = charge.payment_method_id
-        where charge.customer_id = $1
-        and charge.receipt_url is not null
-        order by created desc`,
-        [customer.id]
-      );
+      let customer = await prisma.customer.findUnique({ where: { id } });
+      if (!customer) {
+        res
+          .status(404)
+          .send({ ok: false, error: `"No customer found for id "${id}"` });
+        return;
+      }
+
+      let subscription = await prisma.subscription.findFirst({
+        where: { customer_id: id },
+      });
+
+      let lastInvoice =
+        subscription &&
+        (await prisma.invoice.findFirst({
+          where: { subscription_id: subscription.id },
+          orderBy: { created: "desc" },
+        }));
+
+      let paymentMethodId = customer.invoice_settings_default_payment_method_id;
+
+      let paymentMethod =
+        paymentMethodId &&
+        (await prisma.payment_method.findUnique({
+          where: { id: paymentMethodId },
+        }));
+
+      let charges = await prisma.charge.findMany({
+        where: { customer_id: id, receipt_url: { not: null } },
+        orderBy: { created: "desc" },
+        include: { payment_method: true },
+      });
+
       res.status(200).send({
         ok: true,
         customer,
@@ -52,12 +62,7 @@ export default async function handler(
   }
 }
 
-let listAll = async (query: string, params: any[]) => {
-  let res = await client.query(query, params);
-  return res.rows;
-};
-
-let getOne = async (query: string, params: any[]) => {
-  let res = await client.query(query, params);
-  return res.rows[0];
+// @ts-ignore
+BigInt.prototype.toJSON = function () {
+  return this.toString();
 };

@@ -133,9 +133,9 @@ export default function ShowBilling() {
                             "ACH bank transfer"
                           ) : (
                             <>
-                              {capitalize(charge.card_brand)}{" "}
+                              {capitalize(charge.payment_method.card_brand)}{" "}
                               <span className="font-mono">
-                                *{charge.card_last4}
+                                *{charge.payment_method.card_last4}
                               </span>
                             </>
                           )}
