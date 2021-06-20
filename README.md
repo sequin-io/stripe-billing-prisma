@@ -1,10 +1,8 @@
 # Plug-and-play Stripe billing portal
 
-This Stripe billing portal is a Next.js/Tailwind app. On the back-end, it is powered by a Postgres replica containing Stripe data (thanks to Sync Inc).
+This Stripe billing portal is a Next.js that uses **Tailwind** and **Prisma**. On the back-end, it is powered by a Postgres replica containing Stripe data (thanks to Sync Inc).
 
 ![](./docs/hero-image.png)
-
-This repo uses plain `node-postgres` (`pg`) for all SQL queries. Example repos with popular Node ORMs coming soon.
 
 ### Similar repos
 
@@ -88,11 +86,10 @@ let { id } = req.query;
 Then composes a response object with a number of SQL queries:
 
 ```js
-let customer = await getOne(`select * from customer where id = $1`, [id]);
-let subscription = await getOne(
-  `select * from subscription where customer_id = $1`,
-  [id]
-);
+let customer = await prisma.customer.findUnique({ where: { id } });
+let subscription = await prisma.subscription.findFirst({
+  where: { customer_id: id },
+});
 ```
 
 > Note: to optimize performance/round-trips to the database, these queries can be combined into one super query.
