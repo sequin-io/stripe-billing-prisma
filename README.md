@@ -6,6 +6,10 @@ This Stripe billing portal is a Next.js/Tailwind app. On the back-end, it is pow
 
 This repo uses plain `node-postgres` (`pg`) for all SQL queries. Example repos with popular Node ORMs coming soon.
 
+### Similar repos
+
+- [Stripe billing portal **with Prisma**](https://github.com/syncinc-so/stripe-billing)
+
 ### View live
 
 You can view the app live here:
