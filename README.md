@@ -8,7 +8,7 @@ This repo uses plain `node-postgres` (`pg`) for all SQL queries. Example repos w
 
 ### Similar repos
 
-- [Stripe billing portal **with Prisma**](https://github.com/syncinc-so/stripe-billing)
+- [Stripe billing portal **with plain node-postgres**](https://github.com/syncinc-so/stripe-billing)
 
 ### View live
 
