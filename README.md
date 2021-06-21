@@ -1,6 +1,6 @@
 # Plug-and-play Stripe billing portal
 
-This Stripe billing portal is a Next.js that uses **Tailwind** and **Prisma**. On the back-end, it is powered by a Postgres replica containing Stripe data (thanks to Sync Inc).
+This Stripe billing portal is a Next.js app that uses **Tailwind** and **Prisma**. For data, it is powered by a Postgres replica containing Stripe data (via [Sync Inc](https://syncinc.so/)).
 
 ![](./docs/hero-image.png)
 
@@ -14,7 +14,7 @@ You can view the app live here:
 
 [https://stripe-billing-hio0e7ngh-syncinc.vercel.app/](https://stripe-billing-hio0e7ngh-syncinc.vercel.app/)
 
-The only feature that does not work is the "Update" link for Payment Method.
+The only feature that does not work in the above preview is the "Update" link for Payment Method.
 
 ### Setup
 
@@ -66,6 +66,10 @@ The last step is to bootstrap Prisma with the schema contained in `./prisma/sche
 ```
 $ npx prisma generate
 ```
+
+### Warning before pushing to prod
+
+**There is no login or authentication scheme for the API endpoints in this example**. You must be sure to wrap the API in authentication before pushing to production.
 
 ### How it works
 
